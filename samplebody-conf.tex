@@ -1,30 +1,45 @@
 \section{Introduction}
 
-The industrial adoption of microservices has led to increasingly complex configuration schemes that are commonly fine-tuned manually by engineers. Ganek and Corbi (2003) discussed the need for autonomic computing to handle the complexity of managing software systems, it had been noticed that managing complex systems has grown too costly, prone to error and labor-intensive, because people under such pressure make mistakes, increasing the potential of system outages with a concurrent impact on business [cite The dawning of the autonomic computing era].
+The industrial adoption of microservices has led to increasingly complex configuration schemes that are commonly fine-tuned by engineers manually. Ganek and Corbi (2003) discussed the need for autonomic computing to handle the complexity of managing software systems. They noted that managing complex systems has become too costly, prone to error, and labor-intensive, because people under such pressure make mistakes, increasing the potential of system outages with a concurrent impact on business [cite The dawning of the autonomic computing era]. This has driven many researchers to study self-adaptive systems over the years [cite them]; however, the software industry still lacks practical tools to provide self-adaptation mechanisms to their systems. Thus, most of the configuring and tuning of the systems are performed manually, often in run-time, which is known to be a very time consuming and risky practice.
 
-Paul Horn in his IBM's autonomic computing initiative (2001) described software self-adaptation in terms of a few characteristics of an autonomic computing system, which he called the "grand challenge", here we reorganize these characteristics into the following terminology:
+% Move Paul Horn stuff to Related Work
 
-\begin{itemize}
-  \item \textbf{Self-Awareness}: an autonomic system needs to know itself;
-  \item \textbf{Self-configuring}: an autonomic system must configure and reconfigure itself under varying and unpredictable conditions;
-  \item \textbf{Self-optimization}: an autonomic system never settles for the status quo, it always looks for ways to optimize its workings, it will anticipate the optimized resources needed to meet a user's information needs while keeping its complexity hidden;
-  \item \textbf{Self-healing}: An autonomic system must perform something akin to healing, it must be able to recover from routine and extraordinary events that might cause some parts to malfunction.
-\end{itemize}
+In this work we present an accessible tool to support the development of self-adaptive systems, following alternative approaches compared to what has been done before [cite papers]. The main goal is to provide such support requiring minimal effort from the engineers. In return our tool uses ideas from system observability, machine learning, and control theory to automatically asses the system's environment, predict the impact of changes that could potentially improve the system, and automatically make these changes.
 
-Although this has driven many researchers to study self-adaptive systems over the years [cite them], the software industry still lacks practical tools to provide self-adaptation mechanisms to their systems, and thus, most of the configuring and tuning of the systems happens manually, often in run-time, which is known to be a very time consuming and risky practice.
+Our approach consists of providing an API to collect relevant systems' metrics and configurations that represent the state of the system in relation to time. Then we map Service Level Objectives (SLOs) to some of these metrics, feed these into a machine learning component that is concurrently re-learning the model while analyzing and predicting the workload and the optimal configurations. As a result it provides adaptation plans that can be both 1) automatically executed and 2) explainable, allowing engineers to know the impact of a change in the configuration space before it is deployed.
 
-In this work we focus on the practical realization of self-configuring and self-optimization, based on ideas already discussed, but following alternatives approaches to provide an accessible tool to build self-adaptive systems, such approaches are:
+In summary, our main contributions are:
 
 \begin{itemize}
-  \item Use of system observability to collect a sufficiently big time series dataset that represents the state of a system and its components in relation to time;
-  \item Use of Machine Learning applied to time series data to analyze and predict workload and optimal configuration in order to provide adaptation plans;
-  \item Use of Online Learning to provide constant relearning of the model to adapt to different scenarios and requirements;
-  \item Use of Service Level Objectives as a way to define the system's performance goals that will be used by the tool as optimization objectives;
-  \item Use of the concepts in control theory as the central component of this tool, in which it implements a variation of the well known and studies MAPE loop (Monitor, Analyze, Plan, Execute);
-  \item Abstraction of all the concepts above into a tool that can be integrated to compatible systems, including systems that were built without self-adaptation in mind. 
+  \item We provide a tool that assists the development and evolution of self-adaptive systems, regardless of the presence of self-adaptability in the system's foundations.
+  \item We demonstrate how to map pre-existing SLAs/SLOs to optimization objectives needed by the tool.
+  \item We present a case study that shows how an ordinary software system was improved after integrating a self-adaptation mechanism.
+  \item We show how and why the use of self-adaptive components in ordinary software systems can improve productivity, reliability, and performance.
 \end{itemize}
 
-The rest of the paper is structure as following: 
+The rest of this paper is structure as follows: in Section 2 we discuss some past research in the space of self-adaptive systems and provide fundamental background. In Section 3 we outline our approach, explaining the blend of ideas from different fields. In Section 4 we describe internal details and design decisions of our implementation. In Section 5 we present our case study followed by a discussion and future directions in Section 6. Finally, we conclude our findings with Section 7.
+
+%
+% here we reorganize these characteristics into the following terminology:
+
+% \begin{itemize}
+%   \item \textbf{Self-Awareness}: an autonomic system needs to know itself;
+%   \item \textbf{Self-configuring}: an autonomic system must configure and reconfigure itself under varying and unpredictable conditions;
+%   \item \textbf{Self-optimization}: an autonomic system never settles for the status quo, it always looks for ways to optimize its workings, it will anticipate the optimized resources needed to meet a user's information needs while keeping its complexity hidden;
+%   \item \textbf{Self-healing}: An autonomic system must perform something akin to healing, it must be able to recover from routine and extraordinary events that might cause some parts to malfunction.
+% \end{itemize}
+
+
+% \begin{itemize}
+%   \item Use of system observability to collect a sufficiently big time series dataset that represents the state of a system and its components in relation to time;
+%   \item Use of Machine Learning applied to time series data to analyze and predict workload and optimal configuration in order to provide adaptation plans;
+%   \item Use of Online Learning to provide constant relearning of the model to adapt to different scenarios and requirements;
+%   \item Use of Service Level Objectives as a way to define the system's performance goals that will be used by the tool as optimization objectives;
+%   \item Use of the concepts in control theory as the central component of this tool, in which it implements a variation of the well known and studies MAPE loop (Monitor, Analyze, Plan, Execute);
+%   \item Abstraction of all the concepts above into a tool that can be integrated to compatible systems, including systems that were built without self-adaptation in mind. 
+% \end{itemize}
+
+% The rest of the paper is structure as following: 
 
 
 % I can develop a bit more on this by using this survey's result: According to a recent
@@ -44,6 +59,8 @@ The rest of the paper is structure as following:
 
 Maybe related work would be better now instead of putting it in the end, since there are a lot of related work and they are very relevant to this work, it would be nice to upfront point out what has been done and what would be different in this work.
 
+
+Also include background here.
 
 \section{Approach}
 
@@ -67,9 +84,9 @@ Maybe related work would be better now instead of putting it in the end, since t
 
 \section{Implementation}
 
-\section{Evaluation and discussion}
+\section{Evaluation}
 
-\section{Future work}
+\section{Discussion and future work}
 
 \section{Conclusions}
 

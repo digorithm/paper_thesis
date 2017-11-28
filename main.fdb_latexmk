@@ -1,15 +1,15 @@
 # Fdb version 3
-["bibtex main"] 1510358762 "main.aux" "main.bbl" "main" 1510358766
+["bibtex main"] 1511836214 "main.aux" "main.bbl" "main" 1511841295
   "./ACM-Reference-Format.bst" 1505962855 81890 d0c962ee7b00c892f073ec6439091590 ""
-  "main.aux" 1510358763 4777 2a72a4f4000822aafbdb5ee43a454f64 ""
+  "main.aux" 1511841295 4777 b1004184ed36e364313eacdbb91a69bc ""
   "main.bcf" 0 -1 0 ""
   "sample-bibliography.bib" 1510350627 14625 0498f9543b601eed95faf38127b8869c ""
   (generated)
   "main.bbl"
   "main.blg"
-["pdflatex"] 1510358762 "/home/rodrigo/Dropbox/ubc/thesis/thesis/main.tex" "main.pdf" "main" 1510358766
+["pdflatex"] 1511841294 "/home/rodrigo/Dropbox/ubc/thesis/thesis/main.tex" "main.pdf" "main" 1511841295
   "/etc/texmf/web2c/texmf.cnf" 1487370326 1101 af7716885e081ab43982cab7b4672c1a ""
-  "/home/rodrigo/Dropbox/ubc/thesis/thesis/main.tex" 1510356770 3196 3bf1a4fa788a2606a703b2fa69cccb6f ""
+  "/home/rodrigo/Dropbox/ubc/thesis/thesis/main.tex" 1511836261 3236 e4a3c894df2dbdb293daf61167c5888e ""
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/libertine/lbtn_25tcsq.enc" 1354061736 3072 5bb95ccea73645f2f92572b107496414 ""
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/libertine/lbtn_76gpa5.enc" 1354061736 3084 fca1079ded8e9e82dd71d9ec768687ab ""
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/libertine/lbtn_7grukw.enc" 1354061736 3085 ece23fa68e433b1ee7e76fa7b71bf6d2 ""
@@ -101,6 +101,7 @@
   "/usr/share/texlive/texmf-dist/tex/latex/cmap/ot1.cmap" 1177721415 1207 4e0d96772f0d338847cbfb4eca683c81 ""
   "/usr/share/texlive/texmf-dist/tex/latex/cmap/t1.cmap" 1215522782 1938 beaa4a8467aa0074076e0e19f2992e29 ""
   "/usr/share/texlive/texmf-dist/tex/latex/comment/comment.sty" 1390604416 9666 b0ada4704d4b3d0048a56c49bc982988 ""
+  "/usr/share/texlive/texmf-dist/tex/latex/enumitem/enumitem.sty" 1317339792 42666 6fa770e3485520a6a5f2ea7d259c8f8d ""
   "/usr/share/texlive/texmf-dist/tex/latex/environ/environ.sty" 1364856652 4156 17c9992093c0c51113272da6cc20bfeb ""
   "/usr/share/texlive/texmf-dist/tex/latex/etex-pkg/etex.sty" 1214928088 15274 9f6a2469ac8ebe6168e12b8f32cbe599 ""
   "/usr/share/texlive/texmf-dist/tex/latex/etoolbox/etoolbox.sty" 1294098555 41188 02561c41bb08b479074b6e76f0b7d639 ""
@@ -164,17 +165,17 @@
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1508777151 1346346 7f2b8b715a9ddb095afe3697a6ba02b5 ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1508776900 3822875 03fdee840f4108bbafef9658b49b24ea ""
   "acmart.cls" 1506958560 86488 eedab77403b94bf67a929208be32e074 ""
-  "main.aux" 1510358763 4777 2a72a4f4000822aafbdb5ee43a454f64 ""
-  "main.bbl" 1510358762 13357 6398f83310a8a00ab9342601d4782777 "bibtex main"
-  "main.out" 1510358763 2747 f9d9db20ca35711e2268ad2602341866 ""
-  "main.tex" 1510356770 3196 3bf1a4fa788a2606a703b2fa69cccb6f ""
-  "samplebody-conf.tex" 1510358761 6477 fd2bb4959d5d3f77c347324c3327cf5e ""
+  "main.aux" 1511841295 4777 b1004184ed36e364313eacdbb91a69bc ""
+  "main.bbl" 1511836214 13357 6398f83310a8a00ab9342601d4782777 "bibtex main"
+  "main.out" 1511841295 2747 ee083be59d2a3e2a4484c0c6601f4a3a ""
+  "main.tex" 1511836261 3236 e4a3c894df2dbdb293daf61167c5888e ""
+  "samplebody-conf.tex" 1511841294 8369 3fd50ef7db14817afef8b52f7d004e63 ""
   (generated)
-  "main.aux"
   "rosette-eps-converted-to.pdf"
   "main.out"
-  "flies-eps-converted-to.pdf"
   "fly-eps-converted-to.pdf"
-  "comment.cut"
   "main.log"
   "main.pdf"
+  "comment.cut"
+  "flies-eps-converted-to.pdf"
+  "main.aux"
