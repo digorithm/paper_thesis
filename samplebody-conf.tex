@@ -1,20 +1,19 @@
 \section{Introduction}
 
-The industrial adoption of microservices has led to increasingly complex configuration schemes that are commonly fine-tuned by engineers manually. Ganek and Corbi (2003) discussed the need for autonomic computing to handle the complexity of managing software systems. They noted that managing complex systems has become too costly, prone to error, and labor-intensive, because people under such pressure make mistakes, increasing the potential of system outages with a concurrent impact on business [cite The dawning of the autonomic computing era]. This has driven many researchers to study self-adaptive systems over the years [cite them]; however, the software industry still lacks practical tools to provide self-adaptation mechanisms to their systems. Thus, most of the configuring and tuning of the systems are performed manually, often in run-time, which is known to be a very time consuming and risky practice.
+The industrial adoption of microservices has led to increasingly complex configuration schemes that are commonly fine-tuned by engineers manually. Ganek and Corbi (2003) discussed the need for autonomic computing to handle the complexity of managing software systems. They noted that managing complex systems has become too costly, prone to error, and labor-intensive, because people under such pressure make mistakes, increasing the potential of system outages with a concurrent impact on business \cite{ganek_dawning_2003}. This has driven many researchers to study self-adaptive systems over the years \cite{porter_rex:_2016, andrew_pavlo_self-driving_2017, salehie_self-adaptive_2009, ganapathi_predicting_2009, herbst_self-adaptive_2014, faniyi_architecting_2014}; however, the software industry still lacks practical tools to provide self-adaptation mechanisms to their systems. Thus, most of the configuring and tuning of the systems are performed manually, often in run-time, which is known to be a very time consuming and risky practice \cite{ganek_dawning_2003, using_prob_reasoning_automate_software_tuning, de_lemos_software_2013}.
 
 % Move Paul Horn stuff to Related Work
 
-In this work we present an accessible tool to support the development of self-adaptive systems, following alternative approaches compared to what has been done before [cite papers]. The main goal is to provide such support requiring minimal effort from the engineers. In return our tool uses ideas from system observability, machine learning, and control theory to automatically asses the system's environment, predict the impact of changes that could potentially improve the system, and automatically make these changes.
+In this work we present an accessible tool to support the development of self-adaptive systems. One of our main goals is to provide such support requiring minimal effort from the engineers. In return our tool uses ideas from system observability, machine learning, and control theory to automatically asses the system's environment, predict the impact of changes that could potentially improve the system, and automatically make these changes.
 
-Our approach consists of providing an API to collect relevant systems' metrics and configurations that represent the state of the system in relation to time. Then we map Service Level Objectives (SLOs) to some of these metrics, feed these into a machine learning component that is concurrently re-learning the model while analyzing and predicting the workload and the optimal configurations. As a result it provides adaptation plans that can be both 1) automatically executed and 2) explainable, allowing engineers to know the impact of a change in the configuration space before it is deployed.
+Our approach consists of providing an API to collect relevant systems' metrics and configurations that represent the state of the system in relation to time. Then we map Service Level Objectives (SLOs) to some of these metrics, feed these into a machine learning component that is concurrently re-learning the model while analyzing and predicting the workload and the optimal configurations. As a result it provides adaptation plans that can be both 1) automatically executed, allowing the system to have self-adaptive capabilities, and 2) interpretable, allowing engineers to know the impact of a change in the configuration space before it is deployed.
 
 In summary, our main contributions are:
 
 \begin{itemize}
-  \item We provide a tool that assists the development and evolution of self-adaptive systems, regardless of the presence of self-adaptability in the system's foundations.
-  \item We demonstrate how to map pre-existing SLAs/SLOs to optimization objectives needed by the tool.
-  \item We present a case study that shows how an ordinary software system was improved after integrating a self-adaptation mechanism.
-  \item We show how and why the use of self-adaptive components in ordinary software systems can improve productivity, reliability, and performance.
+  \item We provide a methodology to assist the development and evolution of self-adaptive systems, regardless of the presence of self-adaptability in the system's foundations. Such methodology is encapsulated in the tool described in this work.
+  \item We show how to make the minimal necessary changes to the system, and how to model SLAs/SLOs and map them to the optimization objectives. These tasks being the development cost incurred by the engineers.
+  \item We present a case study that shows how a software system's response time, throughput, and usage were improved by $A\%$, $B\%$, and $C\%$ respectively after integrating a self-adaptation mechanism.
 \end{itemize}
 
 The rest of this paper is structure as follows: in Section 2 we discuss some past research in the space of self-adaptive systems and provide fundamental background. In Section 3 we outline our approach, explaining the blend of ideas from different fields. In Section 4 we describe internal details and design decisions of our implementation. In Section 5 we present our case study followed by a discussion and future directions in Section 6. Finally, we conclude our findings with Section 7.
@@ -59,6 +58,8 @@ The rest of this paper is structure as follows: in Section 2 we discuss some pas
 
 Maybe related work would be better now instead of putting it in the end, since there are a lot of related work and they are very relevant to this work, it would be nice to upfront point out what has been done and what would be different in this work.
 
+% https://arxiv.org/pdf/1712.01208.pdf cite this paper here as an example of a new trend emerging in industry and academia: substituting heuristics in software with machine learning models, making the algorithms more data-aware.
+
 
 Also include background here.
 
@@ -85,6 +86,24 @@ Also include background here.
 \section{Implementation}
 
 \section{Evaluation}
+
+To guide and evaluate our work, five research questions are used:
+
+\begin{itemize}
+  \item \textbf{RQ1:} Can self-adaptation by learned models lead to more stable, faster, and safer software systems?
+  \item \textbf{RQ2:} Can self-adaptation by learned models reduce the need for manually configuring and tuning systems?
+  \item \textbf{RQ3:} Can our tool be easily integrated in software systems, requiring only small changes to the codebase?
+  \item \textbf{RQ4:} Can our tool work with low overhead?
+  \item \textbf{RQ5:} Which features are more relevant to predict workload and performance?
+\end{itemize}
+
+\textcolor{red}{Challenges with RQ1: should we keep "stable" and "safer"? Faster is easy to quantify, stable and safer is tricky to quantify but it can be reasonably easy to infer given all the performance improvements. Thoughts?}
+
+\textcolor{purple}{Challenges with RQ2: same challenges as in RQ1, do we have to quantify or just inferring less need to configure/tune given that it's being done by the learned model \textit{and} it's performing well/better is enough?}
+
+\textcolor{blue}{Challenges with RQ3: "Easily" sounds subjective and hard to quantify, but I believe it's possible to see that it's not a super complicated task if all it's being asked is to instrument/annotate parts of the code. But then again, I might be very biased.}
+
+\textcolor{brown}{Challenges with RQ5: although it might be interesting, it may not generalize to different scenarios.}
 
 \section{Discussion and future work}
 
