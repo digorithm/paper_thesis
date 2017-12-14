@@ -87,23 +87,16 @@ Also include background here.
 
 \section{Evaluation}
 
-To guide and evaluate our work, five research questions are used:
+To guide and evaluate our work, four research questions are used:
 
 \begin{itemize}
-  \item \textbf{RQ1:} Can self-adaptation by learned models lead to more stable, faster, and safer software systems?
-  \item \textbf{RQ2:} Can self-adaptation by learned models reduce the need for manually configuring and tuning systems?
-  \item \textbf{RQ3:} Can our tool be easily integrated in software systems, requiring only small changes to the codebase?
-  \item \textbf{RQ4:} Can our tool work with low overhead?
-  \item \textbf{RQ5:} Which features are more relevant to predict workload and performance?
+  \item \textbf{RQ1:} Can self-adaptation by learned models lead to more stable, faster, and safer software systems, reducing the need to manually configure and tune?
+  \item \textbf{RQ2:} Is requiring: 1) instrumentation, 2) SLOs modelling and mapping, and 3) configuration mapping enough to provide self-adaptability to a system? 
+  \item \textbf{RQ3:} Can this tool work with low overhead?
+  \item \textbf{RQ4:} Which features are more relevant to predict workload and performance?
 \end{itemize}
 
-\textcolor{red}{Challenges with RQ1: should we keep "stable" and "safer"? Faster is easy to quantify, stable and safer is tricky to quantify but it can be reasonably easy to infer given all the performance improvements. Thoughts?}
-
-\textcolor{purple}{Challenges with RQ2: same challenges as in RQ1, do we have to quantify or just inferring less need to configure/tune given that it's being done by the learned model \textit{and} it's performing well/better is enough?}
-
-\textcolor{blue}{Challenges with RQ3: "Easily" sounds subjective and hard to quantify, but I believe it's possible to see that it's not a super complicated task if all it's being asked is to instrument/annotate parts of the code. But then again, I might be very biased.}
-
-\textcolor{brown}{Challenges with RQ5: although it might be interesting, it may not generalize to different scenarios.}
+\textcolor{red}{Why RQ2 is interesting: RQ2 is an interesting question because most related works are very complex to implement/integrate, requiring a huge amount of work, and what's worse: unfamiliar work, whereas if we show that our software became self-adaptive by only requiring these 3 \textbf{familiar} tasks... then it could mean that this tool is somewhat easy to integrate and it's practical}
 
 \section{Discussion and future work}
 

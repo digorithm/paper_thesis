@@ -1,13 +1,13 @@
 # Fdb version 3
-["bibtex main"] 1513035453 "main.aux" "main.bbl" "main" 1513035593
+["bibtex main"] 1513035453 "main.aux" "main.bbl" "main" 1513294888
   "./ACM-Reference-Format.bst" 1505962855 81890 d0c962ee7b00c892f073ec6439091590 ""
-  "main.aux" 1513035593 4882 bd2632f813ad09c0b2f2081d35658ca4 ""
+  "main.aux" 1513294888 4882 bd2632f813ad09c0b2f2081d35658ca4 ""
   "main.bcf" 0 -1 0 ""
   "sample-bibliography.bib" 1513034887 13480 5028843b8191e8c6291935702044a2b7 ""
   (generated)
-  "main.blg"
   "main.bbl"
-["pdflatex"] 1513035592 "/home/rodrigo/Dropbox/ubc/thesis/thesis/main.tex" "main.pdf" "main" 1513035593
+  "main.blg"
+["pdflatex"] 1513294887 "/home/rodrigo/Dropbox/ubc/thesis/thesis/main.tex" "main.pdf" "main" 1513294888
   "/etc/texmf/web2c/texmf.cnf" 1487370326 1101 af7716885e081ab43982cab7b4672c1a ""
   "/home/rodrigo/Dropbox/ubc/thesis/thesis/main.tex" 1513033418 3255 7abf8f9815dfe27d0eb856764978f1d1 ""
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc" 1165713224 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
@@ -177,17 +177,17 @@
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1508777151 1346346 7f2b8b715a9ddb095afe3697a6ba02b5 ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1508776900 3822875 03fdee840f4108bbafef9658b49b24ea ""
   "acmart.cls" 1506958560 86488 eedab77403b94bf67a929208be32e074 ""
-  "main.aux" 1513035593 4882 bd2632f813ad09c0b2f2081d35658ca4 ""
+  "main.aux" 1513294888 4882 bd2632f813ad09c0b2f2081d35658ca4 ""
   "main.bbl" 1513035453 12156 5bee300f5b04fcb1bc3d69a484805547 "bibtex main"
-  "main.out" 1513035593 2747 ee083be59d2a3e2a4484c0c6601f4a3a ""
+  "main.out" 1513294888 2747 ee083be59d2a3e2a4484c0c6601f4a3a ""
   "main.tex" 1513033418 3255 7abf8f9815dfe27d0eb856764978f1d1 ""
-  "samplebody-conf.tex" 1513035592 10379 9b41908a3ad4a7ef79b942b4cab29cc0 ""
+  "samplebody-conf.tex" 1513294887 9892 c80b0da9ff728c1d0f841401e5f35992 ""
   (generated)
+  "comment.cut"
+  "main.log"
+  "main.aux"
+  "main.out"
+  "main.pdf"
   "rosette-eps-converted-to.pdf"
   "flies-eps-converted-to.pdf"
   "fly-eps-converted-to.pdf"
-  "main.pdf"
-  "comment.cut"
-  "main.out"
-  "main.log"
-  "main.aux"
