@@ -27,6 +27,73 @@
 
 %Entries
 
+@book{gmach2007workload,
+  author = {Gmach, Daniel and Rolia, Jerry and Cherkasova, Ludmila and Kemper, Alfons},
+  year = {2007},
+  title = {Workload Analysis and Demand Prediction of Enterprise Data Center Applications},
+  journal = {2007 IEEE 10th International Symposium on Workload Characterization},
+  publisher = {2007 IEEE 10th International Symposium on Workload Characterization},
+  isbn = {9781424415618},
+  doi = {10.1109/iiswc.2007.4362193},
+  url = {http://dx.doi.org/10.1109/iiswc.2007.4362193},
+  month = {7},
+  pages = {171--180},
+  abstract = {Advances in virtualization technology are enabling the creation of resource pools of servers that permit multiple application workloads to share each server in the pool. Understanding the nature of enterprise workloads is crucial to properly designing and provisioning current and future services in such pools. This paper considers issues of workload analysis, performance modeling, and capacity planning. Our goal is to automate the efficient use of resource pools when hosting large numbers of enterprise services. We use a trace based approach for capacity management that relies on i) the characterization of workload demand patterns, ii) the generation of synthetic workloads that predict future demands based on the patterns, and iii) a workload placement recommendation service. The accuracy of capacity planning predictions depends on our ability to characterize workload demand patterns, to recognize trends for expected changes in future demands, and to reflect business forecasts for otherwise unexpected changes in future demands. A workload analysis demonstrates the burstiness and repetitive nature of enterprise workloads. Workloads are automatically classified according to their periodic behavior. The similarity among repeated occurrences of patterns is evaluated. Synthetic workloads are generated from the patterns in a manner that maintains the periodic nature, burstiness, and trending behavior of the workloads. A case study involving six months of data for 139 enterprise applications is used to apply and evaluate the enterprise workload analysis and related capacity planning methods. The results show that when consolidating to 8 processor systems, we predicted future per-server required capacity to within one processor 95% of the time. The accuracy of predictions for required capacity suggests that such resource savings can be achieved with little risk.}
+}
+
+@book{bobroff2007dynamic,
+  author = {Bobroff, Norman and Kochut, Andrzej and Beaty, Kirk},
+  year = {2007},
+  title = {Dynamic Placement of Virtual Machines for Managing SLA Violations},
+  journal = {2007 10th IFIP/IEEE International Symposium on Integrated Network Management},
+  publisher = {2007 10th IFIP/IEEE International Symposium on Integrated Network Management},
+  isbn = {9781424407982},
+  doi = {10.1109/inm.2007.374776},
+  url = {http://dx.doi.org/10.1109/inm.2007.374776},
+  month = {7},
+  pages = {119--128},
+  abstract = {A dynamic server migration and consolidation algorithm is introduced. The algorithm is shown to provide substantial improvement over static server consolidation in reducing the amount of required capacity and the rate of service level agreement violations. Benefits accrue for workloads that are variable and can be forecast over intervals shorter than the time scale of demand variability. The management algorithm reduces the amount of physical capacity required to support a specified rate of SLA violations for a given workload by as much as 50% as compared to static consolidation approach. Another result is that the rate of SLA violations at fixed capacity may be reduced by up to 20%. The results are based on hundreds of production workload traces across a variety of operating systems, applications, and industries.}
+}
+
+@article{caron2011pattern,
+  author = {Caron, Eddy and Desprez, Frédéric and Muresan, Adrian},
+  year = {2011},
+  title = {Pattern Matching Based Forecast of Non-periodic Repetitive Behavior for Cloud Clients},
+  journal = {Journal of Grid Computing},
+  publisher = {Journal of Grid Computing},
+  issn = {1570-7873},
+  doi = {10.1007/s10723-010-9178-4},
+  url = {http://dx.doi.org/10.1007/s10723-010-9178-4},
+  volume = {9},
+  month = {11},
+  pages = {49--64},
+  number = {1},
+  abstract = {The Cloud phenomenon brings along the cost-saving benefit of dynamic scaling. As a result, the question of efficient resource scaling arises. Prediction is necessary as the virtual resources that Cloud computing uses have a setup time that is not negligible. We propose an approach to the problem of workload prediction based on identifying similar past occurrences of the current short-term workload history. We present in detail the Cloud client resource auto-scaling algorithm that uses the above approach to help when scaling decisions are made, as well as experimental results by using real-world Cloud client application traces. We also present an overall evaluation of this approach, its potential and usefulness for enabling efficient auto-scaling of Cloud user resources.}
+}
+
+
+@book{meng2010efficient,
+  author = {Meng, Xiaoqiao and Isci, Canturk and Kephart, Jeffrey and Zhang, Li and Bouillet, Eric and Pendarakis, Dimitrios},
+  year = {2010},
+  title = {Efficient resource provisioning in compute clouds via VM multiplexing},
+  isbn = {9781450300742},
+  doi = {10.1145/1809049.1809052},
+  url = {http://dx.doi.org/10.1145/1809049.1809052},
+  month = {10},
+  pages = {11--20},
+  abstract = {Resource provisioning in compute clouds often require an estimate of the capacity needs of Virtual Machines (VMs). The estimated VM size is the basis for allocating resources commensurate with workload demand. In contrast to the traditional practice of estimating the VM sizes individually, we propose a joint-VM sizing approach in which multiple VMs are consolidated and provisioned, based on an estimate of their aggregate capacity needs. This new approach exploits statistical multiplexing among the workload patterns of multiple VMs, i.e., the peaks and valleys in one workload pattern do not necessarily coincide with the others. Thus, the unused resources of a low utilized VM can be directed to the other co-located VMs with high utilization. Compared to individual VM based provisioning, joint-VM sizing and provisioning may lead to much higher resource utilization. This paper presents three design modules to enable the concept in practice. Specifically, a performance constraint describing the capacity need of a VM for achieving a certain level of application performance; an algorithm for estimating the size of jointly provisioning VMs; a VM selection method that seeks to find good VM combinations for being provisioned together. We showcase that the proposed three modules can be seamlessly plugged into existing applications such as resource provisioning, and providing resource guarantees for VMs. The proposed algorithms and applications are evaluated by monitoring data collected from about 16 thousand VMs in commercial data centers. These evaluations reveal more than 45% improvements in terms of the overall resource utilization.}
+}
+
+
+
+@article{towards_autonomic_allocation,
+author = {Hedwig, Markus; Malkowski, Simon; and Neumann, Dirk},
+year = {2010},
+title = {TOWARDS AUTONOMIC COST-AWARE ALLOCATION OF CLOUD RESOURCES},
+publisher = {ICIS},
+url = {https://aisel.aisnet.org/icis2010_submissions/180}
+}
+
 @article{autonomic_article,
 author = {Horn, P},
 year = {2001},

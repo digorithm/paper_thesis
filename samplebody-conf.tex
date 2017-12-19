@@ -56,12 +56,16 @@ The rest of this paper is structure as follows: in Section 2 we discuss some pas
 
 \section{Related Work}
 
-Maybe related work would be better now instead of putting it in the end, since there are a lot of related work and they are very relevant to this work, it would be nice to upfront point out what has been done and what would be different in this work.
+Between the years of 2007 and 2011, many techniques for forecasting workload and performance metrics have been realized \cite{gmach2007workload, towards_autonomic_allocation, bobroff2007dynamic, meng2010efficient, caron2011pattern}. These works did not focus on tools for applying machine learning to software systems, however, they provided techniques and methodologies for virtual machine allocation in data centers; They used techniques that overlap with our work, in special: time series analysis.
+
+Herbst et al. contributed with a survey of state-of-the-art forecasting approaches based on time series analysis and a decision-based technique to select the best forecasting method based on user-specified objectives \cite{herbst_self-adaptive_2014}. Although they did not focus on self-adaptability of systems in a finer-grained fashion, they did provide useful techniques to reliably forecast workload and performance, which is an important component in our tool -- to enable self-adaptation in a system is to first understand the patterns in its context over time.
+
+Andrew Pavlo et al in their work entitled \textit{Self-Driving Database Management Systems} presented Peloton, a database system designed for autonomous operation. Similar to one of our goals, one of their main goals was to decrease the need for manually-performed operations, though they focused solely on their DBMS implementation. They achieved this by classifying the workload trends, collecting monitoring data, and forecasting resource utilization, then training a model based on this data to predict the best optimization plan. These ideas are important in our work, however, the key difference is that instead of directly embedding these ideas in a specific system -- in this case a DBMS -- and requiring the autonomous components to be tightly coupled, we are embedding a subset of these ideas in a tool that can be integrated in any chosen software system. 
+
+% Next: using_prob_reasoning_automate_software_tuning
 
 % https://arxiv.org/pdf/1712.01208.pdf cite this paper here as an example of a new trend emerging in industry and academia: substituting heuristics in software with machine learning models, making the algorithms more data-aware.
 
-
-Also include background here.
 
 \section{Approach}
 
@@ -91,12 +95,13 @@ To guide and evaluate our work, four research questions are used:
 
 \begin{itemize}
   \item \textbf{RQ1:} Can self-adaptation by learned models lead to more stable, faster, and safer software systems, reducing the need to manually configure and tune?
-  \item \textbf{RQ2:} Is requiring: 1) instrumentation, 2) SLOs modelling and mapping, and 3) configuration mapping enough to provide self-adaptability to a system? 
-  \item \textbf{RQ3:} Can this tool work with low overhead?
-  \item \textbf{RQ4:} Which features are more relevant to predict workload and performance?
+  \item \textbf{RQ2:} How much instrumentation, SLO mapping, and configuration mapping is required to integrate the tool in a system?
+  \item \textbf{RQ3:} How much performance overhead is incurred by using this tool?
+  \item \textbf{RQ4:} What metrics and features have more impact on the tool's performance?
 \end{itemize}
 
-\textcolor{red}{Why RQ2 is interesting: RQ2 is an interesting question because most related works are very complex to implement/integrate, requiring a huge amount of work, and what's worse: unfamiliar work, whereas if we show that our software became self-adaptive by only requiring these 3 \textbf{familiar} tasks... then it could mean that this tool is somewhat easy to integrate and it's practical}
+
+%\textcolor{red}{Why RQ2 is interesting: RQ2 is an interesting question because most related works are very complex to implement/integrate, requiring a huge amount of work, and what's worse: unfamiliar work, whereas if we show that our software became self-adaptive by only requiring these 3 \textbf{familiar} tasks... then it could mean that this tool is somewhat easy to integrate and it's practical}
 
 \section{Discussion and future work}
 
