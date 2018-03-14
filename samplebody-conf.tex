@@ -4,19 +4,23 @@ The industrial adoption of microservices has led to increasingly complex configu
 
 % Move Paul Horn stuff to Related Work
 
-In this work we present an accessible tool to support the development of self-adaptive systems. One of our main goals is to provide such support requiring minimal effort from the engineers. In return our tool uses ideas from system observability, machine learning, and control theory to automatically asses the system's environment, predict the impact of changes that could potentially improve the system, and automatically make these changes.
+In this work we present \projectname{}, an accessible tool that allows engineers to integrate machine learning into systems, it delegates the configuring or tuning of a system to a learned model, rather requiring engineers to perform these operations manually or through manually tuned heuristics.
 
-Our approach consists of providing an API to collect relevant systems' metrics and configurations that represent the state of the system in relation to time. Then we map Service Level Objectives (SLOs) to some of these metrics, feed these into a machine learning component that is concurrently re-learning the model while analyzing and predicting the workload and the optimal configurations. As a result it provides adaptation plans that can be both 1) automatically executed, allowing the system to have self-adaptive capabilities, and 2) interpretable, allowing engineers to know the impact of a change in the configuration space before it is deployed.
+One of our main goals is to provide the aforementioned support with minimal effort required from the engineers. \projectname{} uses ideas from system observability, machine learning, and control theory to automatically asses the system's environment, predict the impact of changes that could potentially improve the system, and make these changes automatically.
+
+Our approach consists of providing an API to collect relevant systems' metrics and configurations that represent the state of the system in relation to time. We map Service Level Agreements (SLAs) to a subset of these metrics, feed them into a machine learning component that is concurrently re-learning the model while analyzing and predicting the workload and the optimal configurations. As a result it provides adaptation plans that can be both 1) automatically executed, allowing the system to have self-adaptive capabilities, and 2) interpretable, allowing engineers to know the impact of a change in the configuration space before it is deployed.
+
+The tool not only provides reactive adaptations---adaptations that happen only when a constraint is violated---but also provides ahead-of-time adaptation plans that can be executed before a violation happens. This is achieved by predicting the context of the observed system.
 
 In summary, our main contributions are:
 
 \begin{itemize}
-  \item We provide a methodology to assist the development and evolution of self-adaptive systems, regardless of the presence of self-adaptability in the system's foundations. Such methodology is encapsulated in the tool described in this work.
-  \item We show how to make the minimal necessary changes to the system, and how to model SLAs/SLOs and map them to the optimization objectives. These tasks being the development cost incurred by the engineers.
-  \item We present a case study that shows how a software system's response time, throughput, and usage were improved by $A\%$, $B\%$, and $C\%$ respectively after integrating a self-adaptation mechanism.
+  \item Providing a methodology to assist the development and evolution of self-adaptive systems, regardless of the presence of self-adaptability in the system's foundations. Such methodology is encapsulated in the tool described in this work.
+  \item Showing how to make the minimal necessary changes to the system, and how to model SLAs/SLOs and map them to the optimization objectives. These tasks being the development cost incurred by the engineers.
+  \item Presenting a case study that shows how a software system's response time, throughput, and usage were improved by $A\%$, $B\%$, and $C\%$ respectively after the integration of \projectname{}.
 \end{itemize}
 
-The rest of this paper is structure as follows: in Section 2 we discuss some past research in the space of self-adaptive systems and provide fundamental background. In Section 3 we outline our approach, explaining the blend of ideas from different fields. In Section 4 we describe internal details and design decisions of our implementation. In Section 5 we present our case study followed by a discussion and future directions in Section 6. Finally, we conclude our findings with Section 7.
+The rest of this paper is structured as the following: in Section 2 we discuss some past research in the space of self-adaptive systems and provide fundamental background. In Section 3 we outline our approach, explaining the blend of ideas from different fields. In Section 4 we describe internal details and design decisions of our implementation. In Section 5 we present our case study followed by a discussion and future directions in Section 6. Finally, we conclude our findings with Section 7.
 
 %
 % here we reorganize these characteristics into the following terminology:
@@ -54,38 +58,308 @@ The rest of this paper is structure as follows: in Section 2 we discuss some pas
 
 % IBM’s autonomic computing initiative has been outlined broadly. Paul Horn described this “grand challenge” and called for industry-wide collaboration toward developing autonomic computing systems that have characteristics as follows: ● To be autonomic  a system needs to “ know itself ”— and consist of components that also possess a sys- tem identity. ● An autonomic system must con fi gure and recon- fi gure itself under varying and unpredictable con- ditions. ● An autonomic system never settles for the status quo — it always looks for ways to optimize its work- ings. ● An autonomic system must perform something akin to healing — it must be able to recover from routine and extraordinary events that might cause some parts to malfunction. ● A virtual world is no less dangerous than the phys- ical one, so an autonomic computing system must be an expert in self-protection. ● An autonomic computing system knows its envi- ronment and the context surrounding its activity, and acts accordingly. ● An autonomic system cannot exist in a hermetic environment (and must adhere to open standards). ● Perhaps most critical for the user, an autonomic computing system will anticipate the optimized re- sources needed to meet a user ’ s information needs while keeping its complexity hidden.
 
-\section{Related Work}
+\section{Related Work and foundations}
 
-Between the years of 2007 and 2011, many techniques for forecasting workload and performance metrics have been realized \cite{gmach2007workload, towards_autonomic_allocation, bobroff2007dynamic, meng2010efficient, caron2011pattern}. These works did not focus on tools for applying machine learning to software systems, however, they provided techniques and methodologies for virtual machine allocation in data centers; They used techniques that overlap with our work, in special: time series analysis.
+% Explanation for related work scheme: control theory, SE and mape-k => time series => ts for resources allocation => best ts forecasting approaches => workload simulation => hogna: almost what I wanted but not quite. plus: flawed => continuing on hogna: here's what didn't work and the differences => previous work are reactive, where's aot mape-k => peloton: like that but generic
 
-Herbst et al. contributed with a survey of state-of-the-art forecasting approaches based on time series analysis and a decision-based technique to select the best forecasting method based on user-specified objectives \cite{herbst_self-adaptive_2014}. Although they did not focus on self-adaptability of systems in a finer-grained fashion, they did provide useful techniques to reliably forecast workload and performance, which is an important component in our tool -- to enable self-adaptation in a system is to first understand the patterns in its context over time.
+% note: it would be better to focus on ml applied to system, control theory + self-adapative community seems very fancy and annoying
+\subsection{Control theory in software engineering}
 
-Andrew Pavlo et al in their work entitled \textit{Self-Driving Database Management Systems} presented Peloton, a database system designed for autonomous operation. Similar to one of our goals, one of their main goals was to decrease the need for manually-performed operations, though they focused solely on their DBMS implementation. They achieved this by classifying the workload trends, collecting monitoring data, and forecasting resource utilization, then training a model based on this data to predict the best optimization plan. These ideas are important in our work, however, the key difference is that instead of directly embedding these ideas in a specific system -- in this case a DBMS -- and requiring the autonomous components to be tightly coupled, we are embedding a subset of these ideas in a tool that can be integrated in any chosen software system. 
+The ideas in control theory have been widely adopted in the software engineering research community, with special attention to the Monitor-Analyze-Plan-Execute over a shared Knowledge, known as MAPE-K feedback loop, which proved to be a powerful tool to build self-adaptive systems \cite{arcaini_modeling_2015, salehie_self-adaptive_2009, Brun2013, computing_architectural_2006, kephart_vision_2003, de_lemos_software_2013}. Angelopoulos et al discussed the intersection between software engineering and control theory \cite{filieri2015software}. They showed how control-theoretical software systems are implemented and their design process, as well as the differences of the word "adaptation" in both fields. These works were shown to be invaluable to the development of \projectname{}.
 
-% Next: using_prob_reasoning_automate_software_tuning
+\subsection{Machine learning in control theory}
+The applications of machine learning in control theoretical models have been discussed in \cite{Gillula10_FusingMachineLearningControlTheory}, where the main idea is to take advantage of high performance of machine learning methods while using control theory to guarantee safety. Reinforcement learning \cite{Sutton:1998:IRL:551283} has similar goals to those in control theory, but with different approaches. \projectname{} uses ideas from machine learning, reinforcement learning, and control theory to enable self-adaptability.
 
-% https://arxiv.org/pdf/1712.01208.pdf cite this paper here as an example of a new trend emerging in industry and academia: substituting heuristics in software with machine learning models, making the algorithms more data-aware.
+\subsection{Time series analysis}
 
+Time series data has been used to analyze and predict patterns in data with respect to time, with applications on understanding how to efficiently allocate computational resources, which is a key strategy in our work to provide ahead-of-time adaptation.
+
+Between the years of 2007 and 2011, many techniques for forecasting workload and performance metrics using time series data have been realized \cite{gmach2007workload, towards_autonomic_allocation, bobroff2007dynamic, meng2010efficient, caron2011pattern}. With these forecasts, they provided methodologies for virtual machine allocation in data centers. These works did not focus on tools for applying machine learning to software systems nor on tools to enable self-adaptability in arbitrary software systems---which is our end goal.
+
+Herbst et al. contributed with a survey of state-of-the-art forecasting approaches based on time series analysis and a decision-based technique to select the best forecasting method based on user-specified objectives \cite{herbst_self-adaptive_2014}. They provided a useful technique to reliably forecast workload and performance metrics based on time series analysis, which is an important component in our tool. To enable self-adaptation in a system is to first understand the patterns in its context over time.
+
+\subsection{Workload modelling}
+
+Another important piece in \projectname{} is how we simulate the workload intensity to initially train the adaptation model. To have an accurate workload, we need to model it as close as possible to a real-world workload. Herbst et al. presented the Descartes Load Intensity Model \cite{kistowski_modeling_2017}, a powerful tool for describing load intensity variations over time, that can also be used for an accurate benchmarking based on realistic workload and performance analysis. \projectname{} uses some of these ideas to model workloads and simulate these workloads to train the adaptation model.
+
+\subsection{Self-adaptive systems}
+
+In 2015, Cornel Barna et al proposed Hogna, a platform to deploy self-adaptive applications in cloud environment \cite{barna_hogna:_2015}. It provides a framework that abstracts the deployment details, for example: spinning-off and managing instances on Amazon EC2 or OpenStack, the user then can focus on the adaptation mechanism. A key difference between Hogna and \projectname{} is that \projectname{} is not a deployment framework, but rather a library that assists the implementation of a MAPE-K closed loop by abstracting the rigorous formal modelling to a machine learning model that will be fed with the identified goals (SLOs), instrumented data, and identified knobs of the system.
+
+\projectname{} can be used either for managing adaptive deployment schemes or optimizing finer-grained knobs of a system, for instance, optimizing configuration knobs of a Postgres instance used by a system in order to improve performance and prevent SLO violations---which is our case study in this paper. In addition to that, a minor difference between these two tools is how much is asked from the user; Hogna asks for a configuration file that describes the topology to be deployed, monitors to use, and more related settings, custom java classes to handle specific behaviors, and PXL file with the model description and a configuration file for Kalman filters, whereas \projectname{} requires fewer actions from the user, while enabling self-adaptability and giving flexibility to the user: it can be used both for higher level tasks---deployment---and lower level tasks---self-tuning and self-configuring of smaller pieces of software.
+
+All previously cited works approach the adaptation problem with a reactive strategy: when a violation occurs---the service gets slower, errors are thrown---an adaptation is triggered and executed, stabilizing the system. \projectname{} is capable of providing the same style adapation, while providing ahead-of-time adaptation: we use time-series analysis to create an adaptation plan for a future time, executing it right before a violation occurs, mitigating the risk of a potential SLO violation. 
+
+Andrew Pavlo et al presented Peloton \cite{andrew_pavlo_self-driving_2017}, a database system designed for autonomous operation. Similar to one of our goals, one of their main goals was to decrease the need for manually-performed operations, though they focused solely on applying their ideas and techniques to their DBMS implementation. They achieved this by classifying the workload trends, collecting monitoring data, and forecasting resource utilization, then training a model based on this data to predict the best optimization plan. These ideas are important to our work, the key difference is that instead of directly embedding these ideas in a specific system---in this case a DBMS---and requiring the autonomous components to be tightly coupled, we are embedding a subset of these ideas in a tool that can be integrated in any arbitrarily chosen software system.
+
+\subsection{Machine learning-enhanced software systems}
+
+In a recent work entitled The Case for Learned Index Structures, Kraska et al have demonstrated that machine learned models have the potential to provide significant benefits over state-of-the-art database indexes. \cite{kraska_case_2017}
+
+This worked showed that by replacing manually tuned heuristics with learned models enabled it to outperform cache-optimized B-Trees by up to 70\%.
+
+We draw much of our inspiration from this work; \projectname{}'s central idea is to allow systems that relies heavily on manual configurations and heuristics to be enhanced with learned models. This could be applied to many different domains. In this work we experiment this idea in a HTTP rest API's backend.  
+
+The idea of machine learning-enhanced software systems is to move from using the same algorithms, heuristics, data structures, or configurations in multiple different contexts, to personalized configurations; different configurations that perform better for different scenarios. This relates well to the No Free Lunch theorem:
+\begin{quote}
+  If an algorithm performs well on a certain class of problems then it necessarily pays for that with degraded performance on the set of all remaining problems.
+\end{quote}
+
+This is the main idea behind \projectname{}: the integration of learned models to generate adaptation plans according to the different scenarios.
 
 \section{Approach}
 
-\subsection{Control theory and self-adaptive systems}
+% This is a very important section, try to make it as clear as possible, the current version is not clear, it's just a brain dump. You can understand it because you see the end goal and the design, the readers do not
 
-\subsection{System's configuration as an optimization problem}
+Before diving into the implementation details, it is interesting to understand each conceptual piece in our approach. From a high-level view, our approach's workflow to turn a target system into a self-adaptive system (machine-learning enhanced system?) consists of:
 
-\subsection{Providing system adaptation with machine learning}
+\begin{itemize}
+  \item Instrumenting the target system
+  \item Detecting relevant configuration knobs
+  \item Defining Service Level Agreements for a subset of the instrumented data
+  \item Allowing configuration knobs to be changed programmatically
+\end{itemize}
 
-\subsection{Workload simulation}
+These 4 steps (see figure \ref{fig:finch1}) will create the necessary environment for the target system and \projectname{} to implement a MAPE-K loop. In the following subsections we discuss the rationale behind these steps. 
 
-\subsection{System instrumentation}
+\begin{figure*}[t]
+  \includegraphics[width=\textwidth]{images/finch_user_perspective.jpg}
+  \caption{\projectname{}'s approach from a user perspective. The four necessary steps to change the target system into a self-adaptive system}
+  \label{fig:finch1}
+\end{figure*}
+
+\subsection{System's heuristics and configuration as a learning problem}
+
+A learning problem can be simply put as a set of observations comprised of input data and output data and some unknown relationship between the two, and the goal of a learning system is to learn a generalized mapping between input and output data such that predictions can be made for new instances drawn from the domain where the output variable is unknown.
+
+The main hypothesis behind \projectname{} is that if we can model the configuration scheme or the heuristics of a system as a learning problem, then we can learn a model that can find patterns between the system's observations and the system's knobs---configuration knobs or the values used in heuristics that control the system's behaviors---enabling the system to predict the best set of knobs for a given specific observed scenario.
+
+Because machine learning is about learning to predict a certain behavior in the future based on what was experienced in the past, an important step when modelling a problem as a learning problem is the choice of observations used to train the system.
+
+In this context, observations could be anything that relates to the system's behavior, performance, inputs, and outputs. For instance: throughput, requests per second, latencies, and machine's resources usage---CPU and memory.
+
+In \projectname{}'s case, it is important to give the necessary means to collect the best possible set of observations from the system and its environment. Thus, to model the system's heuristics and configuration as learning problem, \projectname{} assumes a system properly instrumented.
+
+\subsection{Learnable patterns in system's context}
+
+\subsubsection{System instrumentation}
+
+The first step in our approach is to observe the system's behavior and context, this is an important technique to understand how a running system behaves; by having data that tells us how a system behaves under the combination of different workloads and different configuration knobs, we can see that interesting patterns emerge from this data.
+
+Software instrumentation refers to pieces of code inserted in some parts of the system's codebase to record its context, for instance: the values of function parameters, latencies, and time to execute a certain block of code. The purpose of these pieces of code is to help measuring performance, debugging, finding bottlenecks, and similar tasks.
+
+Luckily, the software industry has been enforcing system instrumentation by providing many solutions for software instrumentation and monitoring such as Dtrace \cite{cantrill_dynamic_2004}, Prometheus \cite{Prometheus}, Nagios \cite{Nagios}, and Datadog \cite{Datadog}.
+
+Instrumentation is heavily used in industry also to detect Service Level Objectives (SLOs) violation and to perform resource management---two tasks that are crucial to \projectname{}.
+
+Under \projectname{}'s layers all monitoring is performed using Prometheus. Prometheus is a pull-based monitoring tool and time-series database. A normal concern is: what is the overhead incurred by a pull-based monitoring tool? The answer to this question is straightforward: the overhead is negligible. Unlike monitoring tools like Nagios, which frequently executes check scripts, it only collects time series data from a set of instrumented targets over the network. For each target, the Prometheus server simply fetches the current state of all metrics of that target over HTTP and has no other execution overhead that would be pull-related.
+
+Another reason why Prometheus overhead is low is that Prometheus is not an event-based system, it works by regularly collecting aggregated time series data that represents the current state of a given set of metrics, not the underlying events that led to the generation of those metrics. Thus, it does not send a message to Prometheus server for each request as it is handled, it simply count up those requests in memory---causing no monitoring overhead or traffic---then Prometheus pulls this data every few configurable seconds, returning the current counter value and its timestamp.
+
+In this first step, what we ask from the users is to choose parts of their systems to instrument, more specifically, instrument parts that are closely related to performance and resource usage. What has showed to work for us---and for many practitioners in industry-- is to instrument: CPU usage, CPU idleness, memory usage, I/O writes per second, I/O reads per second, workload---it can be, for instance, requests per second---and latencies of desired services, for instance: the latency of each web service endpoint.
+
+\subsubsection{Performance percentages and percentiles over average}
+
+A common mistake both in industry and in the research community is measuring performance---specially latency or response time---using averages. Averages hide outliers and it is usually very skewed. To better illustrate this problem, consider having 100 requests per minute to your target system, if 80 of these requests take 200ms, which is relatively fast, and 20 of these requests take 10000ms, or 10 seconds, your average is $2.1$ seconds, which is an acceptable latency. However, it hides the fact that $20\%$ of these requests are taking an unacceptable amount of time to be served.
+
+Rather than averaging performance metrics, \projectname{} takes three more reliable approaches to measure performance metrics:
+
+\begin{itemize}
+  \item Percentiles, such as 99th and 90th percentiles , in order to capture and understand outliers. This way we can understand upper bounds and uncover more silent bugs.
+  \item Agreements on a percentage of requests being served under an agreed threshold. For example, an agreement could be: \textit{$95\%$ of the POST requests to endpoint $A$ will be served under 200ms}. This is a good strategy because rather than focusing on averaging---which is not reliable---we focus on serving well a big portion of the requests. This synergizes well with histograms and buckets.
+  \item APDEX \cite{Apdex} as an extension on agreements.
+\end{itemize}
+
+APDEX is an industry standard that gives a score of satisfaction based on the latency or response time of requests. It is calculated by: $APDEX_T = \frac{S + \frac{T}{2}}{R}$. Where $T$ is a selected threshold, $S$ is the number of satisfied requests, or requests that take less than $T$ to be served, $T$ is the tolerated requests, or requests that take between $T$ and $T*4$ to be served, and $R$ is the total number of requests. A request is considered frustrated if it takes more than $T*4$ to be served.
+
+To compare APDEX to averaging latencies, think of two scenarios:
+
+\begin{itemize}
+  \item $60\%$ of the requests take $200ms$, $20\%$ of the requests take $10ms$, and $20\%$ of the requests take 10 seconds. The average of latencies in this case is $2.1s$, which gives you a false sense of confidence. The $APDEX_{2s}$ is $80\%$, which is considered low.
+  \item 1 request takes 5 minutes, 10 requests take 200ms. Here we have a case of anomalous latency. The average is 27 seconds, which is very high, whereas $APDEX_{2s}$ is $91\%$, telling us that, given our selected threshold, the situation is not bad, rather, it was just an anomalous case.
+  
+\end{itemize}
+
+\projectname{} uses APDEX agreements and 99th and 90th percentiles as features and targets when training the predictions models.
+
+
+\subsubsection{Configuration knobs instrumentation}
+
+Now that we have data points that describe the performance and behavior of our system, we have to capture the current state of the configuration knobs; it can range from a variety of configurations, and it is highly dependent on the kind of system you are dealing with. Here we define a configuration knob as a property, parameter, or variable that holds a value that controls a certain aspect of a system or algorithm.
+
+\subsubsection{Defining Service Level Agreements}
+
+Having collected the instrumented data---data that represents the snapshot of both the configuration knobs and the performance at a given time---we have to point which of these instrumented data points are under service level agreements. Here we call these features Service Level Indicators (SLIs), they are a subset of the set of instrumented metrics that must satisfy a desired objetive, the SLA. 
+
+For instance, given that we instrumented the latency of the endpoint $A$ of our web service, it is agreed that $95\%$ of the requests to this endpoint should have latency below $200ms$. This is properly captured by \projectname{}'s API.
+
+% TODO: show formal language to capture this
+
+
+\subsubsection{Resulting dataset}
+
+We have collected four sets of features: metrics related to the system's context---performance and behavior metrics---configuration knobs, the workload, and service level indicators that must satisfy their objectives. The goal for the collection of this data is to build a dataset that will be used later to train models that will be used to make prediction based on these three sets of features, and the models will be trained to answer the following question: \textit{given a workload---e.g requests per seconds--- and the performance metrics of the system serving these requests, what is the optimal set of configuration knobs that will prevent service level objective violations?}
+
+The dataset is constructed in such a way that each row describes the context of the system---workload, metrics, SLIS, and configuration knobs---at a given time captured by a timestamp.
+
+The following matrix summarizes how the dataset is organized:
+
+\setlength{\arraycolsep}{1pt}
+\renewcommand\arraystretch{1.0}
+\setcounter{MaxMatrixCols}{20}
+$$
+\begin{vmatrix}
+  t_1 & W_1 & M_{1_1} & M_{2_1} & \dots & M_{i_1} & k_{1_1} & k_{2_1} & \dots & k_{t_1} & SLI_{1_1} & SLI_{2_1} & \dots & SLI_{\delta_1}\\
+  t_2 & W_2 & M_{1_2} & M_{2_2} & \dots & M_{i_2} & k_{1_2} & k_{2_2} & \dots & k_{t_2} & SLI_{1_2} & SLI_{2_2} & \dots & SLI_{\delta_2}\\
+  \vdots & \vdots & \vdots & \vdots & \ddots & \vdots & \vdots & \vdots & \ddots & \vdots & \vdots & \vdots & \ddots & \vdots \\
+  t_n & W_n & M_{1_n} & M_{2_n} & \dots & M_{i_n} & k_{1_n} & k_{2_n} & \dots & k_{t_n} & SLI_{1_n} & SLI_{2_n} & \dots & SLI_{\delta_n}\\
+\end{vmatrix}
+$$
+
+Where:
+
+\begin{enumerate}
+  \item $n$ is the number of collected samples
+  \item $t_{\phi}$ is the timestamp of the $\phi-th$ example
+  \item $M_{j_\phi}$ is the $j-th$ instrumented metric in timestamp $t_{\phi}$. $j$ ranges from $1$ to $i$, the last instrumented metric.
+  \item $k_{c_\phi}$ is the value in the $c-th$ configuration knob in timestamp $t_{\phi}$. $c$ ranges from $1$ to $t$, the last collected configuration knob.
+  \item $SLI_{o_\phi}$ is the $o-th$ service level indicator in the timestamp $t_{\phi}$---which is one of the instrumented metrics that was set to be an SLI. $o$ ranges from $1$ to $\delta$, the last collected SLI.
+\end{enumerate}
+
+This dataset should capture the context of a system with respect to workload, instrumented metrics, and the values in configuration knobs.  
 
 \subsection{Machine learning architecture}
 
-\subsubsection{Features and models}
+Given the previously defined dataset, \projectname{} trains many different models, each one targeting a different task. We have 2 ML pipelines: training the models, which also involves cross validating each model in isolation, and validating the prediction workflow: the workflow that triggers the interaction between the many models.
+
+\subsubsection{Training the models}
+
+There are two main classes of learned models:
+
+\begin{enumerate}
+  \item SLI models: these models predict, given the system's context, knobs values included, the SLI value. For instance, given the context, it outputs the latency of a certain endpoint. We will train a model for each collected SLI.
+  \item Knob models: these models predict, given the system's context, other knobs \textit{not} included, one SLI $s$ included, and others SLIs that are not $s$ excluded, the optimal knob value. For instance, it outputs the optimal knob $k$ to achieve a certain latency $x$. We will train a model for each combination of SLI and knob collected.
+\end{enumerate}
+
+The training of the different models consists of slicing the original dataset to fit the models' needs. For instance, when we want to predict the latency of endpoint $A$, we must say that latency $A$ is the target, or $y$, of the model, and the corpus, or $X$, is the rest of the dataset \textit{minus} the latency $A$ column. Then we train the model passing this specific $X$ and $y$.
+
+The algorithms \ref{alg:TrainSLIModels} and \ref{alg:TrainKnobModels} show with more details the process of training the models.
+\SetInd{0.75em}{0.1em}
+\begin{algorithm}
+  \SetAlgoNoLine
+  \caption{Trains a model for each SLI and return a list of models}\label{alg:TrainSLIModels}
+  \SetKwInOut{Input}{inputs}
+  \SetKwInOut{Output}{output}
+  \SetKwProg{TrainSLIModels}{TrainSLIModels}{}{}
+
+  \TrainSLIModels{$(Dataset)$}{
+    \Input{A dataset that contains the system's context}
+    \Output{$n$ SLI models, where $n$ is the number of collected SLIs}
+    $models \gets []$ \;
+    \ForEach{SLI $S \in Dataset$}{%
+      $y \gets Dataset[S]$\;
+      $X \gets Dataset \setminus Dataset[S]$\;
+      $regressor \gets learning\_algorithm(...)$\; 
+      $score \gets Cross\_validation(regressor, X, y$)\;
+      \If{($score \geq 70\%$)}{%
+        $models[S] \gets regressor.fit(X,y)$\;
+      }
+    }
+    \KwRet{models}\;
+  }
+\end{algorithm}
+
+Note that before training the final models, we cross validate the model with multiple---currently 100---splits of the dataset and performing the cross validation with 80/20 ratio: train with 80\% of the dataset, test with 20\% of the dataset, 100 times. This way we prevent cases of overfitting the model to the data.
+
+\begin{algorithm}
+  \SetAlgoNoLine
+  \caption{Trains a model for each Knob x SLI combination and return a 2D array containing the models}\label{alg:TrainKnobModels}
+  \SetKwInOut{Input}{inputs}
+  \SetKwInOut{Output}{output}
+  \SetKwProg{TrainKnobModels}{TrainKnobModels}{}{}
+
+  \TrainKnobModels{$(Dataset)$}{
+    \Input{A dataset that contains the system's context}
+    \Output{$i *j$ $SLI \Rightarrow Knob$ models, where $i$ is the number of collected SLIs and $j$ is the number of collected knobs}
+    $models \gets []$ \;
+    \ForEach{SLI $S \in Dataset$}{%
+      \ForEach{Knob $K \in Dataset$}{%
+        $y \gets Dataset[K]$\;
+        $X \gets Dataset \setminus Dataset[Knobs] \land Dataset[SLIs \neq S]$\;
+        $regressor \gets learning\_algorithm(...)$\; 
+        $score \gets Cross\_validation(regressor, X, y$)\;
+        \If{($score \geq 70\%$)}{%
+          $models[S, K] \gets regressor.fit(X,y)$\;
+        }
+      }    
+    }
+    \KwRet{models}\;
+  }
+\end{algorithm}
+
+\subsubsection{Validating the prediction workflow}
+
+The cross validation in algorithms \ref{alg:TrainSLIModels} and \ref{alg:TrainKnobModels} can only validate the accuracy of the each model in isolation. This is not enough to tell if the prediction workflow will work properly. For instance, one of our goals is to predict the best set of configuration knobs for a set of violated SLOs, so that after executing the adaptation plan, their respective SLIs will improve, preventing the SLO to be violated.
+
+To achieve this level of validation, we perform bidirectional predictions: we grab a sample from the dataset that contains many SLO violations, predict the optimal knobs that could prevent the violations, then, using the predicted knobs, we predict the SLIs and see if it indeed improved in comparison to the original SLIs from the bad sample. Algorithm \ref{alg:ValidatePredictionWorkflow} shows with more details how this procedure works. 
+
+\begin{algorithm}
+  \SetAlgoNoLine
+  \caption{Validates the prediction workflow by making bidirectional predictions. First we predict the best set of knobs given a bad scenario, then we predict the SLIs considering the predicted set of knobs}\label{alg:ValidatePredictionWorkflow}
+  \SetKwInOut{Input}{inputs}
+  \SetKwInOut{Output}{output}
+  \SetKwProg{ValidatePredictionWorkflow}{ValidatePredictionWorkflow}{}{}
+
+  \ValidatePredictionWorkflow{$(Dataset)$}{
+    $test \gets Dataset[0]$ \;
+    $X \gets Dataset[1:]$\;
+    $SLI\_models = TrainSLIModels(X)$\;
+    $knob\_models = TrainKnobModels(X)$\;
+    $knob\_predictions \gets []$ \;
+    \tcc{In this first foreach, we predict the optimal knob values for a sample with SLO violations}
+    \ForEach{SLI $S \in Dataset$}{%
+      $SLI\_test \gets test \setminus test[Knobs] \land test[SLIs \neq S]$\;
+      \ForEach{Knob $K \in Dataset$}{%
+        $pred \gets knob\_models[S,K].predict(SLI\_test)$
+        $knob\_predictions[S, K] \gets pred$ \;
+      }
+    }
+    $final\_knobs \gets$ most predicted set of knobs\;
+    \tcc{Next we predict SLIs given the predicted set of knobs}
+    $inverse\_test \gets test$ \;
+    \ForEach{Knob $K \in Dataset$}{%
+      $inverse\_test[K] \gets final\_knobs[K]$ \;
+    }
+    \ForEach{SLI $S \in Dataset$}{%
+      $knob\_test \gets inverse\_test \setminus inverse\_test[S]$ \;
+      Modify each remaining SLI value in $knob\_test$ to a value below its SLO \;
+      $predicted\_sli \gets SLI\_models[S].predict(knob\_test)$ \;
+      Validate that $predicted\_sli$ is below its SLO \;
+    }
+  }
+\end{algorithm}
+
+
+\subsection{Control-theoretic approach to self-adaptation}
+
+Here we talk first about the architecture with regards to MAPE-k and how we generate adaptation plans. Then we talk about creating adaptation plans for future workload, by predicting the workload using time-series data.
+
+\subsubsection{Ahead-of-time adaptation}
+
+As we showed before, the dataset contains the timestamp for each sample, meaning that we can take advantage of time-series analysis techniques to predict, given a certain time in the future, what will be the workload. Having the future workload in hands, we can use this data point to predict, like we did in the previous section, the best set of knobs based on the predicted SLIs.
+
+The key trick is that this plan for the optimal set of knobs will not be immediately carried out---the time for this adaptation has not come yet. It will, however, be stored in a table that contains all scheduled plans, and an observer will be watching this table and carrying out the plans a few minutes before the prediction for a given workload.
+
+Should it fail to predict the correct workload, it will, once again, predict the set of optimal knobs for the current workload and immediately carry out the plan.
+
+This procedure will create adaptation plans for a short time window, executing adaptations before they are needed, thus, before a violation occurs.
+
 
 \subsubsection{Online training}
 
-\subsubsection{Achieving self-adapation}
+Here we talk about the constant retraining of the models, since we will have data coming in all the data, so lots of corrections to be made.
+
+\subsection{Propagating adaptation plans}
 
 \section{Implementation}
 
@@ -94,14 +368,66 @@ Andrew Pavlo et al in their work entitled \textit{Self-Driving Database Manageme
 To guide and evaluate our work, four research questions are used:
 
 \begin{itemize}
-  \item \textbf{RQ1:} Can self-adaptation by learned models lead to more stable, faster, and safer software systems, reducing the need to manually configure and tune?
+  \item \textbf{RQ1:} Can self-adaptation by learned models lead to more stable and faster software systems, reducing the need to manually configure and tune?
   \item \textbf{RQ2:} How much instrumentation, SLO mapping, and configuration mapping is required to integrate the tool in a system?
   \item \textbf{RQ3:} How much performance overhead is incurred by using this tool?
   \item \textbf{RQ4:} What metrics and features have more impact on the tool's performance?
 \end{itemize}
 
+In the next subsection we discuss the setup for the experiment of the tool and techniques previously discussed.
 
-%\textcolor{red}{Why RQ2 is interesting: RQ2 is an interesting question because most related works are very complex to implement/integrate, requiring a huge amount of work, and what's worse: unfamiliar work, whereas if we show that our software became self-adaptive by only requiring these 3 \textbf{familiar} tasks... then it could mean that this tool is somewhat easy to integrate and it's practical}
+\subsection{Experiment}
+
+To evaluate the tool and the techniques here discussed, we used a toy web application as the target system of \projectname{}. Although simple, this web application capture most commonly seen complexities, here is a brief description of it:
+
+\begin{itemize}
+  \item It consists of the backend component that holds all the core logic of the application.
+  \item The application's services are exposed through many HTTP endpoints that follow a REsT API approach. In our scenario, these endpoints are subject to a set of Service Level Objectives. For instance, \textit{endpoint\_A\_POST} is a HTTP POST endpoint for the service $A$, and it should not take more than $X ms$ to respond.
+  \item This backend is containerized with Docker.
+  \item Another Docker container holds a Postgres database used by the application.
+  \item At last, another Docker container holds \projectname{} itself, including the vendors' tools used by it---Prometheus, for instance.
+\end{itemize}
+
+% The goal of this subsub is to motivate the use of the tool and techniques. We must show that default and static configurations cannot serve different scenarios
+\subsubsection{The challenging task of configuring a Postgres database}
+
+It is known that, because of the fact that Postgres contains a very big set of configurations knobs, it is a challenging task to adapt Postgres to different scenarios. For instance, for a certain type of query, properly configuring Postgres' \textit{work\_memory} variable can drastically improve its performance. There are many cases like this one, however, it would not be productive to discusss each one of them.
+
+Postgres $9.4$ was used, and the configuration knobs considered were:
+
+\begin{itemize}
+  \item Shared buffers
+  \item Effective cache size
+  \item Work memory
+  \item Write ahead log (WAL) buffers
+  \item Checkpoint completion target
+  \item Maintenance work memory
+  \item Checkpoint segmnets
+  \item Default statistics target
+  \item Random page cost
+\end{itemize}
+
+In order to show that the Postgres default configuration is not the optimal one, we ran a workload simulation, which is similar to HTTP load testers, but instead of stressing a single endpoint with a very large number of requests per second, this workload simulation simulates different user workflows with varying intensities. For instance, 200 requests per second calling different sequences of endpoints: call endpoint $A$, wait for response, call $B$, wait response, and so on, until it completes a workflow that would be common for a user of this service. 
+
+We ran the simulation---which tested the web application, and not the Postgres directly---for a certain period of time using two different sets of Postgres configuration knobs. By running this simulation we ended up with the dataset discussed in Section 3. The results confirmed both our beliefs and what is experienced in industry: The latencies of the endpoints were drastically affected by the different combinations of configuration knobs; different types of workflow and different intensities required different set of configurations in order to keep latency low, a non-optimal configuration for a given scenario could cause the violation of an SLO.
+
+\iffalse
+\begin{table}[]
+  \centering
+  \caption{My caption}
+  \label{my-label}
+  \begin{tabular}{llllllllll}
+  Endpoint A(ms) & checkpoint\_completion\_target & checkpoint\_segments & default\_stat\_target & effective\_cache\_size & maintenance\_work\_mem & random\_page\_cost & shared\_buffers & wal\_buffers & work\_mem \\
+  1846                                           & 0.1                                & 1                        & 30                              & 16                             & 8                              & 2                      & 16                      & 2                    & 512               \\
+  1846                                           & 0.1                                & 1                        & 30                              & 16                             & 8                              & 2                      & 16                      & 2                    & 512               \\
+  1846                                           & 0.1                                & 1                        & 30                              & 16                             & 8                              & 2                      & 16                      & 2                    & 512               \\
+  119                                            & 0.5                                & 3                        & 100                             & 128                            & 16                             & 4                      & 128                     & 128                  & 1024              \\
+  119                                            & 0.5                                & 3                        & 100                             & 128                            & 16                             & 4                      & 128                     & 128                  & 1024              \\
+  119                                            & 0.5                                & 3                        & 100                             & 128                            & 16                             & 4                      & 128                     & 128                  & 1024             
+  \end{tabular}
+  \end{table}
+\fi
+
 
 \section{Discussion and future work}
 

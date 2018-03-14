@@ -12,11 +12,18 @@
 %\setcopyright{usgovmixed}
 %\setcopyright{cagov}
 %\setcopyright{cagovmixed}
+\usepackage{dirtytalk}
 \usepackage{enumitem}
 \setlist{nolistsep}
 \usepackage[utf8]{inputenc}
 \usepackage{color}
-
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{pgfplotstable}
+\usepackage[linesnumbered,ruled]{algorithm2e}
+\newcommand\mycommfont[1]{\footnotesize\ttfamily\textcolor{blue}{#1}}
+\SetCommentSty{mycommfont}
+\newcommand{\projectname}{Finch}
 
 % DOI
 \acmDOI{10.475/123_4}
@@ -68,7 +75,7 @@
 \begin{abstract}
 Due to the advancement in distributed systems and the increasing industrial demands, software systems contain multiple components with complex interactions, e.g databases and their replication, caching components, proxies and load balancers, application instances and their complex configuration parameters. The engineers in a project must thinker with many configuration parameters that change the behavior and/or structure of the system, this can cause many problems that affect the quality of the service. In other words, dealing with high dimensionality is both cognitively demanding and risky for the project.
 
-In this work we show the design and analysis of a pragmatic machine learning based tool that aims to assist the engineering of systems that can: 1) monitor themselves, 2) Forecast workloads and performance metrics and 3) Change themselves in run-time by self-configuring and adapting for a specific scenario. After the integration of this tool with a system, it should be able to answer the question: given that we have many configuration parameters, how can we change them in order to optimize a certain metric for a given predicted workload?
+In this work we show the design and analysis of a pragmatic machine learning based tool that aims to assist the engineering of systems that can: 1) Monitor themselves, 2) Forecast workloads and performance metrics and 3) Change themselves in run-time by self-configuring and adapting for a specific scenario. After the integration of this tool with a system, it should be able to answer the question: given that we have many configuration parameters, how can we change them in order to optimize a certain metric for a given predicted workload?
 
 We show that it can decrease the risk of changing systems' configurations in run-time and decrease the engineering effort that otherwise would be spent manually optimizing parameters, usually following a trial-and-error approach.
 

@@ -27,6 +27,86 @@
 
 %Entries
 
+@inproceedings{cantrill_dynamic_2004,
+	title = {Dynamic {Instrumentation} of {Production} {Systems}.},
+	booktitle = {{USENIX} {Annual} {Technical} {Conference}, {General} {Track}},
+	author = {Cantrill, Bryan and Shapiro, Michael W. and Leventhal, Adam H.},
+	year = {2004},
+	pages = {15--28},
+	file = {cantrill.pdf:/home/rodrigo/.zotero/zotero/gvnp3j3r.default/zotero/storage/E5U52JVP/cantrill.pdf:application/pdf}
+}
+
+@online{Prometheus,
+  author = {Prometheus},
+  title = {Prometheus},
+  year = 2018,
+  url = {https://prometheus.io/},
+  urldate = {2018-02-02}
+}
+
+@online{Apdex,
+  author = {Apdex},
+  title = {Apdex},
+  year = 2018,
+  url = {apdex.org},
+  urldate = {2018-02-02}
+}
+
+@online{Nagios,
+  author = {Nagios},
+  title = {Nagios},
+  year = 2018,
+  url = {https://www.nagios.org/},
+  urldate = {2018-02-02}
+}
+
+@online{Datadog,
+  author = {Datadog},
+  title = {Datadog},
+  year = 2018,
+  url = {https://www.datadoghq.com/},
+  urldate = {2018-02-02}
+}
+
+@article{kraska_case_2017,
+	title = {The {Case} for {Learned} {Index} {Structures}},
+	url = {http://arxiv.org/abs/1712.01208},
+	abstract = {Indexes are models: a B-Tree-Index can be seen as a model to map a key to the position of a record within a sorted array, a Hash-Index as a model to map a key to a position of a record within an unsorted array, and a BitMap-Index as a model to indicate if a data record exists or not. In this exploratory research paper, we start from this premise and posit that all existing index structures can be replaced with other types of models, including deep-learning models, which we term learned indexes. The key idea is that a model can learn the sort order or structure of lookup keys and use this signal to effectively predict the position or existence of records. We theoretically analyze under which conditions learned indexes outperform traditional index structures and describe the main challenges in designing learned index structures. Our initial results show, that by using neural nets we are able to outperform cache-optimized B-Trees by up to 70\% in speed while saving an order-of-magnitude in memory over several real-world data sets. More importantly though, we believe that the idea of replacing core components of a data management system through learned models has far reaching implications for future systems designs and that this work just provides a glimpse of what might be possible.},
+	urldate = {2018-01-09},
+	journal = {arXiv:1712.01208 [cs]},
+	author = {Kraska, Tim and Beutel, Alex and Chi, Ed H. and Dean, Jeffrey and Polyzotis, Neoklis},
+	month = dec,
+	year = {2017},
+	note = {arXiv: 1712.01208},
+	keywords = {Computer Science - Data Structures and Algorithms, Computer Science - Databases, Computer Science - Neural and Evolutionary Computing},
+	file = {arXiv\:1712.01208 PDF:/home/rodrigo/.zotero/zotero/gvnp3j3r.default/zotero/storage/P7ULR2LG/Kraska et al. - 2017 - The Case for Learned Index Structures.pdf:application/pdf;arXiv.org Snapshot:/home/rodrigo/.zotero/zotero/gvnp3j3r.default/zotero/storage/57CCGMV8/1712.html:text/html}
+}
+
+@article{barna_hogna:_2015,
+	title = {Hogna: a {Platform} for {Self}-{Adaptive} {Applications} in {Cloud} {Environments}},
+	url = {http://dx.doi.org/10.1109/seams.2015.26},
+	doi = {10.1109/seams.2015.26},
+	abstract = {We propose Hogna, a platform for deploying self-managing web applications on cloud. The platform enables the deployment of the applications based on the automation of a set of operations (starting instances, installing necessary software and configuring the instances, etc.), and then the continuous monitoring of the health of the applications. The gathered monitoring data is analyzed using a performance model and an action plan is created and executed. Any components involved (for monitoring, analyzing, planning and deployment changes) can be customized to fit the needs of the application and/or researcher.},
+	journal = {2015 IEEE/ACM 10th International Symposium on Software Engineering for Adaptive and Self-Managing Systems},
+	author = {Barna, Cornel and Ghanbari, Hamoun and Litoiu, Marin and Shtern, Mark},
+	year = {2015},
+	pages = {83--87},
+	file = {Barna_et_al-2015-2015_IEEE_ACM_10th_International_Symposium_on_Software_Engineering_for_Adaptive....pdf:/home/rodrigo/.zotero/zotero/gvnp3j3r.default/zotero/storage/HTURBFKK/Barna_et_al-2015-2015_IEEE_ACM_10th_International_Symposium_on_Software_Engineering_for_Adaptive....pdf:application/pdf}
+}
+
+@article{filieri2015software,
+  author = {Filieri, Antonio and Maggio, Martina and Angelopoulos, Konstantinos and D'Ippolito, Nicolás and Gerostathopoulos, Ilias and Hempel, Andreas Berndt and Hoffmann, Henry and Jamshidi, Pooyan and Kalyvianaki, Evangelia and Klein, Cristian and Krikava, Filip and Misailovic, Sasa and Papadopoulos, Alessandro Vittorio and Ray, Suprio and Sharifloo, Amir M and Shevtsov, Stepan and Ujma, Mateusz and Vogel, Thomas},
+  year = {2015},
+  title = {Software Engineering Meets Control Theory},
+  journal = {2015 IEEE/ACM 10th International Symposium on Software Engineering for Adaptive and Self-Managing Systems},
+  publisher = {2015 IEEE/ACM 10th International Symposium on Software Engineering for Adaptive and Self-Managing Systems},
+  doi = {10.1109/seams.2015.12},
+  url = {http://dx.doi.org/10.1109/seams.2015.12},
+  pages = {71--82},
+  abstract = {The software engineering community has proposed numerous approaches for making software self-adaptive. These approaches take inspiration from machine learning and control theory, constructing software that monitors and modifies its own behavior to meet goals. Control theory, in particular, has received considerable attention as it represents a general methodology for creating adaptive systems. Control-theoretical software implementations, however, tend to be ad hoc. While such solutions often work in practice, it is difficult to understand and reason about the desired properties and behavior of the resulting adaptive software and its controller. This paper discusses a control design process for software systems which enables automatic analysis and synthesis of a controller that is guaranteed to have the desired properties and behavior. The paper documents the process and illustrates its use in an example that walks through all necessary steps for self-adaptive controller synthesis.}
+}
+
+
 @book{gmach2007workload,
   author = {Gmach, Daniel and Rolia, Jerry and Cherkasova, Ludmila and Kemper, Alfons},
   year = {2007},
@@ -128,6 +208,33 @@ booktitle = {Computing Systems}
 	pages = {333--348}
 }
 
+@article{arcaini_modeling_2015,
+	title = {Modeling and {Analyzing} {MAPE}-{K} {Feedback} {Loops} for {Self}-{Adaptation}},
+	url = {http://dx.doi.org/10.1109/seams.2015.10},
+	doi = {10.1109/seams.2015.10},
+	abstract = {The MAPE-K (Monitor-Analyze-Plan-Execute over a shared Knowledge) feedback loop is the most influential reference control model for autonomic and self-adaptive systems. This paper presents a conceptual and methodological framework for formal modeling, validating, and verifying distributed self-adaptive systems. We show how MAPE-K loops for self-adaptation can be naturally specified in an abstract stateful language like Abstract State Machines. In particular, we exploit the concept of multi-agent Abstract State Machines to specify decentralized adaptation control by using MAPE computations. We support techniques for validating and verifying adaptation scenarios, and getting feedback of the correctness of the adaptation logic as implemented by the MAPE-K loops. In particular, a verification technique based on meta-properties is proposed to allow discovering unwanted interferences between MAPE-K loops at the early stages of the system design. As a proof-of-concepts, we model and analyze a traffic monitoring system.},
+	journal = {2015 IEEE/ACM 10th International Symposium on Software Engineering for Adaptive and Self-Managing Systems},
+	author = {Arcaini, Paolo and Riccobene, Elvinia and Scandurra, Patrizia},
+	year = {2015},
+	pages = {13--23},
+	file = {Arcaini_et_al-2015-2015_IEEE_ACM_10th_International_Symposium_on_Software_Engineering_for....pdf:/home/rodrigo/.zotero/zotero/gvnp3j3r.default/zotero/storage/CAT2RV7H/Arcaini_et_al-2015-2015_IEEE_ACM_10th_International_Symposium_on_Software_Engineering_for....pdf:application/pdf}
+}
+
+@article{kistowski_modeling_2017,
+	title = {Modeling and {Extracting} {Load} {Intensity} {Profiles}},
+	volume = {11},
+	issn = {1556-4665},
+	url = {http://dx.doi.org/10.1145/3019596},
+	doi = {10.1145/3019596},
+	abstract = {Today’s system developers and operators face the challenge of creating software systems that make efficient use of dynamically allocated resources under highly variable and dynamic load profiles, while at the same time delivering reliable performance. Autonomic controllers, for example, an advanced autoscaling mechanism in a cloud computing context, can benefit from an abstracted load model as knowledge to reconfigure on time and precisely. Existing workload characterization approaches have limited support to capture variations in the interarrival times of incoming work units over time (i.e., a variable load profile). For example, industrial and scientific benchmarks support constant or stepwise increasing load, or interarrival times defined by statistical distributions or recorded traces. These options show shortcomings either in representative character of load variation patterns or in abstraction and flexibility of their format. In this article, we present the Descartes Load Intensity Model (DLIM) approach addressing these issues. DLIM provides a modeling formalism for describing load intensity variations over time. A DLIM instance is a compact formal description of a load intensity trace. DLIM-based tools provide features for benchmarking, performance, and recorded load intensity trace analysis. As manually obtaining and maintaining DLIM instances becomes time consuming, we contribute three automated extraction methods and devised metrics for comparison and method selection. We discuss how these features are used to enhance system management approaches for adaptations during runtime, and how they are integrated into simulation contexts and enable benchmarking of elastic or adaptive behavior. We show that automatically extracted DLIM instances exhibit an average modeling error of 15.2\% over 10 different real-world traces that cover between 2 weeks and 7 months. These results underline DLIM model expressiveness. In terms of accuracy and processing speed, our proposed extraction methods for the descriptive models are comparable to existing time series decomposition methods. Additionally, we illustrate DLIM applicability by outlining approaches of workload modeling in systems engineering that employ or rely on our proposed load intensity modeling formalism.},
+	number = {4},
+	journal = {ACM Transactions on Autonomous and Adaptive Systems (TAAS)},
+	author = {Kistowski, Jóakim Von and Herbst, Nikolas and Kounev, Samuel and Groenda, Henning and Stier, Christian and Lehrig, Sebastian},
+	year = {2017},
+	pages = {23},
+	file = {Kistowski_et_al-2017-ACM_Transactions_on_Autonomous_and_Adaptive_Systems_(TAAS).pdf:/home/rodrigo/.zotero/zotero/gvnp3j3r.default/zotero/storage/UTDNJECT/Kistowski_et_al-2017-ACM_Transactions_on_Autonomous_and_Adaptive_Systems_(TAAS).pdf:application/pdf}
+}
+
 @book{andrew_pavlo_self-driving_2017,
 	title = {Self-{Driving} {Database} {Management} {Systems}},
 	author = {Andrew Pavlo, Gustavo Angulo, Joy Arulraj, Haibin Lin, Jiexi Lin, Lin Ma, Prashanth Menon, Todd Mowry, Matthew Perron, Ian Quah, Siddharth Santurkar, Anthony Tomasic, Skye Toor, Dana Van Aken, Ziqi Wang, Yingjun Wu, Ran Xian, Tieying Zhang},
@@ -152,6 +259,55 @@ booktitle = {Computing Systems}
 	month = dec,
 	year = {2009},
 	keywords = {SummerResearch, SummerResearchProposal}
+}
+
+@article{kephart_vision_2003,
+	title = {The vision of autonomic computing},
+	volume = {36},
+	issn = {0018-9162},
+	doi = {10.1109/MC.2003.1160055},
+	abstract = {Summary form only given. Strong light-matter coupling has been recently successfully explored in the GHz and THz [1] range with on-chip platforms. New and intriguing quantum optical phenomena have been predicted in the ultrastrong coupling regime [2], when the coupling strength Ω becomes comparable to the unperturbed frequency of the system ω. We recently proposed a new experimental platform where we couple the inter-Landau level transition of an high-mobility 2DEG to the highly subwavelength photonic mode of an LC meta-atom [3] showing very large Ω/ωc = 0.87. Our system benefits from the collective enhancement of the light-matter coupling which comes from the scaling of the coupling Ω ∝ √n, were n is the number of optically active electrons. In our previous experiments [3] and in literature [4] this number varies from 104-103 electrons per meta-atom. We now engineer a new cavity, resonant at 290 GHz, with an extremely reduced effective mode surface Seff = 4 × 10-14 m2 (FE simulations, CST), yielding large field enhancements above 1500 and allowing to enter the few ({\textless};100) electron regime. It consist of a complementary metasurface with two very sharp metallic tips separated by a 60 nm gap (Fig.1(a, b)) on top of a single triangular quantum well. THz-TDS transmission experiments as a function of the applied magnetic field reveal strong anticrossing of the cavity mode with linear cyclotron dispersion. Measurements for arrays of only 12 cavities are reported in Fig.1(c). On the top horizontal axis we report the number of electrons occupying the topmost Landau level as a function of the magnetic field. At the anticrossing field of B=0.73 T we measure approximately 60 electrons ultra strongly coupled (Ω/ω- {\textbar}{\textbar}},
+	number = {1},
+	journal = {Computer},
+	author = {Kephart, J. O. and Chess, D. M.},
+	month = jan,
+	year = {2003},
+	keywords = {autonomic computing, Biology computing, Computer industry, Computer vision, corporate-wide computing systems, Crisis management, DP industry, Environmental management, Humans, Internet, LAN interconnection, Pervasive computing, self-managing computing systems, software complexity crisis, Technological innovation},
+	pages = {41--50},
+	file = {IEEE Xplore Abstract Record:/home/rodrigo/.zotero/zotero/gvnp3j3r.default/zotero/storage/X6SHXPZW/1160055.html:text/html}
+}
+
+@article{computing_architectural_2006,
+	title = {An architectural blueprint for autonomic computing},
+	volume = {31},
+	journal = {IBM White Paper},
+	author = {Computing, Autonomic},
+	year = {2006},
+	file = {AC Blueprint White Paper V7.pdf:/home/rodrigo/.zotero/zotero/gvnp3j3r.default/zotero/storage/PRXD2UJX/AC Blueprint White Paper V7.pdf:application/pdf}
+}
+
+@Inbook{Brun2013,
+author="Brun, Yuriy
+and Desmarais, Ron
+and Geihs, Kurt
+and Litoiu, Marin
+and Lopes, Antonia
+and Shaw, Mary
+and Smit, Michael",
+editor="de Lemos, Rog{\'e}rio
+and Giese, Holger
+and M{\"u}ller, Hausi A.
+and Shaw, Mary",
+title="A Design Space for Self-Adaptive Systems",
+bookTitle="Software Engineering for Self-Adaptive Systems II: International Seminar, Dagstuhl Castle, Germany, October 24-29, 2010 Revised Selected and Invited Papers",
+year="2013",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="33--50",
+abstract="Self-adaptive systems research is expanding as systems professionals recognize the importance of automation for managing the growing complexity, scale, and scope of software systems. The current approach to designing such systems is ad hoc, varied, and fractured, often resulting in systems with parts of multiple, sometimes poorly compatible designs. In addition to the challenges inherent to all software, this makes evaluating, understanding, comparing, maintaining, and even using such systems more difficult. This paper discusses the importance of systematic design and identifies the dimensions of the self-adaptive system design space. It identifies key design decisions, questions, and possible answers relevant to the design space, and organizes these into five clusters: observation, representation, control, identification, and enacting adaptation. This characterization can serve as a standard lexicon, that, in turn, can aid in describing and evaluating the behavior of existing and new self-adaptive systems. The paper also outlines the future challenges for improving the design of self-adaptive systems.",
+isbn="978-3-642-35813-5",
+doi="10.1007/978-3-642-35813-5_2",
+url="https://doi.org/10.1007/978-3-642-35813-5_2"
 }
 
 @article{herbst_self-adaptive_2014,
@@ -309,3 +465,24 @@ booktitle = {Computing Systems}
 	note = {DOI: 10.1007/978-3-642-35813-5},
 	file = {10.1007978-3-642-35813-5.pdf:/home/rodrigo/.zotero/zotero/gvnp3j3r.default/zotero/storage/4TA2JX8D/10.1007978-3-642-35813-5.pdf:application/pdf}
 }
+
+@presentation{Gillula10_FusingMachineLearningControlTheory,
+    author = {Jeremy Gillula},
+    title = {Fusing Machine Learning \& Control Theory},
+    day = {3},
+    month = {November},
+    year = {2010},
+    note = {Presented at weekly ActionWebs meeting.},
+    abstract = {(No abstract.)},
+    URL = {http://chess.eecs.berkeley.edu/pubs/714.html}
+}
+
+@book{Sutton:1998:IRL:551283,
+ author = {Sutton, Richard S. and Barto, Andrew G.},
+ title = {Introduction to Reinforcement Learning},
+ year = {1998},
+ isbn = {0262193981},
+ edition = {1st},
+ publisher = {MIT Press},
+ address = {Cambridge, MA, USA},
+} 
