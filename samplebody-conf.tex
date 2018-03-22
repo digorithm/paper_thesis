@@ -2,13 +2,13 @@
 
 The industrial adoption of microservices has led to increasingly complex configuration schemes that are commonly fine-tuned by engineers manually. Ganek and Corbi (2003) discussed the need for autonomic computing to handle the complexity of managing software systems. They noted that managing complex systems has become too costly, prone to error, and labor-intensive, because people under such pressure make mistakes, increasing the potential of system outages with a concurrent impact on business \cite{ganek_dawning_2003}. This has driven many researchers to study self-adaptive systems over the years \cite{porter_rex:_2016, andrew_pavlo_self-driving_2017, salehie_self-adaptive_2009, ganapathi_predicting_2009, herbst_self-adaptive_2014, faniyi_architecting_2014}; however, the software industry still lacks practical tools to provide self-adaptation mechanisms to their systems. Thus, most of the configuring and tuning of the systems are performed manually, often in run-time, which is known to be a very time consuming and risky practice \cite{ganek_dawning_2003, using_prob_reasoning_automate_software_tuning, de_lemos_software_2013}.
 
-% Move Paul Horn stuff to Related Work
+In this work we present \projectname{}, an accessible tool that allows engineers to integrate self-adaptation mechanisms into systems, it delegates the configuring or tuning of a system to a learned model, rather than requiring engineers to perform these operations manually or through manually tuned heuristics.
 
-In this work we present \projectname{}, an accessible tool that allows engineers to integrate machine learning into systems, it delegates the configuring or tuning of a system to a learned model, rather requiring engineers to perform these operations manually or through manually tuned heuristics.
+Building self-adaptive systems is a major engineering challenge \cite{brun_engineering_2009}. \projectname{}'s proposal is to enable self-adaptation by giving the user the ability to inject the main components of a self-adaptive mechanism into an existing target system in a loosely-coupled fashion.
 
 One of our main goals is to provide the aforementioned support with minimal effort required from the engineers. \projectname{} uses ideas from system observability, machine learning, and control theory to automatically asses the system's environment, predict the impact of changes that could potentially improve the system, and make these changes automatically.
 
-Our approach consists of providing an API to collect relevant systems' metrics and configurations that represent the state of the system in relation to time. We map Service Level Agreements (SLAs) to a subset of these metrics, feed them into a machine learning component that is concurrently re-learning the model while analyzing and predicting the workload and the optimal configurations. As a result it provides adaptation plans that can be both 1) automatically executed, allowing the system to have self-adaptive capabilities, and 2) interpretable, allowing engineers to know the impact of a change in the configuration space before it is deployed.
+Our approach consists of providing ways to inject a control loop to an existing target system through an API to collect relevant systems' metrics and configurations that represent the state of the system in relation to time. We map Service Level Agreements (SLAs) to a subset of these metrics, feed them into a machine learning component that is concurrently re-learning the model while analyzing current event data and predicting the optimal configurations. As a result it provides adaptation plans that can be both 1) automatically executed, allowing the system to have self-adaptive capabilities, and 2) interpretable, allowing engineers to know the impact of a change in the configuration space before it is deployed.
 
 The tool not only provides reactive adaptations---adaptations that happen only when a constraint is violated---but also provides ahead-of-time adaptation plans that can be executed before a violation happens. This is achieved by predicting the context of the observed system.
 
@@ -127,6 +127,15 @@ These 4 steps (see figure \ref{fig:finch1}) will create the necessary environmen
   \caption{\projectname{}'s approach from a user perspective. The four necessary steps to change the target system into a self-adaptive system}
   \label{fig:finch1}
 \end{figure*}
+
+\subsection{\projectname{} as a self-adaptation enabler}
+
+In terms of self-adaptive systems, \projectname{} follows a centralized and top-down approach. According to the self-adaptive community, a centralized and top-down self-adaptive system operates with the guidance of a central controller, assesses its own behavior in the current surroundings, and adapts itself if the monitoring and analysis warrants it \cite{brun_engineering_2009}.
+
+The main design goal in \projectname{} is to allow its users to inject feedback loops---based on the classic MAPE-K loop---through its API. As discussed by Y. Brun et al, to reason about uncertainty effectively, we need to elevate feedback loops to be visible and first class \cite{brun_engineering_2009}. However, rather than hard wiring the self-adaptation mechanisms inside the target system, \projectname{} keeps it loosely-coupled; the target system and \projectname{} work together to collect data about target system's environment and states, then \projectname{} store this knowledge for future reference and models training, with learned models ready to make predictions, \projectname{} watches and analyze event data and, based on its internal feedback loop, spits executions plans that aim to optimize the target system, this adaptation will lead to more event data that will be continuously stored and analyzed, where the cycle repeats.
+
+
+% TODO: add some more context on "challenges ahead" in Y. Brun's paper. With Finch, we are tackling HCI, reengineering, and middleware components of his defined challenges
 
 \subsection{System's heuristics and configuration as a learning problem}
 
@@ -343,6 +352,8 @@ To achieve this level of validation, we perform bidirectional predictions: we gr
 \subsection{Control-theoretic approach to self-adaptation}
 
 Here we talk first about the architecture with regards to MAPE-k and how we generate adaptation plans. Then we talk about creating adaptation plans for future workload, by predicting the workload using time-series data.
+
+\projectname{} offers a way to separate three main components in a traditional self-adaptive architecture: the monitoring process, the adaptation controller, and the management of control objectives (adaptation goals).
 
 \subsubsection{Ahead-of-time adaptation}
 
