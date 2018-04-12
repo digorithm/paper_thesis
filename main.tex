@@ -3,11 +3,20 @@
 \usepackage{booktabs} % For formal tables
 
 
+% remove next three lines for CRC
+% Removes citation information below abstract
+\settopmatter{printacmref=false} 
+% removes footnote with conference information in first column
+\renewcommand\footnotetextcopyrightpermission[1]{} 
+% removes running headers
+\pagestyle{plain} 
+
+
 % Copyright
 %\setcopyright{none}
 %\setcopyright{acmcopyright}
 %\setcopyright{acmlicensed}
-\setcopyright{rightsretained}
+% \setcopyright{rightsretained}
 %\setcopyright{usgov}
 %\setcopyright{usgovmixed}
 %\setcopyright{cagov}
@@ -26,50 +35,47 @@
 \newcommand{\projectname}{Finch}
 
 % DOI
-\acmDOI{10.475/123_4}
-
+%\acmDOI{10.475/123_4}
 % ISBN
-\acmISBN{123-4567-24-567/08/06}
+%\acmISBN{123-4567-24-567/08/06}
 
 %Conference
-\acmConference[WOODSTOCK'97]{ACM Woodstock conference}{July 1997}{El
-  Paso, Texas USA} 
-\acmYear{1997}
-\copyrightyear{2016}
+%\acmConference[WOODSTOCK'97]{ACM Woodstock conference}{July 1997}{El Paso, Texas USA} 
+%\acmYear{1997}
+%\copyrightyear{2016}
 
 
-\acmArticle{4}
-\acmPrice{15.00}
+%\acmArticle{4}
+%\acmPrice{15.00}
 
 % These commands are optional
 %\acmBooktitle{Transactions of the ACM Woodstock conference}
-\editor{Rodrigo Araújo}
-\editor{Reid Holmes}
+%\editor{Rodrigo Araújo}
+%\editor{Reid Holmes}
 
 
 \begin{document}
 \title{Title TBD}
 
-
 \author{Rodrigo Araújo}
-\orcid{1234-5678-9012}
+%\orcid{1234-5678-9012}
 \affiliation{%
+  \department{Department of Computer Science}
   \institution{University of British Columbia}
-  \city{Vancouver} 
-  \state{British Columbia} 
+  \city{Vancouver, Canada} 
 }
 \email{rodarauj@cs.ubc.ca}
 
 \author{Reid Holmes}
 \affiliation{%
+  \department{Department of Computer Science}
   \institution{University of British Columbia}
-  \city{Vancouver} 
-  \state{British Columbia} 
+  \city{Vancouver, Canada} 
 }
 \email{rtholmes@cs.ubc.ca}
 
 % The default list of authors is too long for headers.
-\renewcommand{\shortauthors}{B. Trovato et al.}
+% \renewcommand{\shortauthors}{B. Trovato et al.}
 
 
 \begin{abstract}
@@ -86,27 +92,25 @@ We show that it can decrease the risk of changing systems' configurations in run
 % http://dl.acm.org/ccs.cfm
 % Please copy and paste the code instead of the example below. 
 %
-\begin{CCSXML}
-<ccs2012>
- <concept>
-  <concept_id>10010520.10010553.10010562</concept_id>
-  <concept_desc>TBD~TBD</concept_desc>
-  <concept_significance>500</concept_significance>
- </concept>
-</ccs2012>  
-\end{CCSXML}
+%\begin{CCSXML}
+%<ccs2012>
+% <concept>
+%  <concept_id>10010520.10010553.10010562</concept_id>
+%  <concept_desc>TBD~TBD</concept_desc>
+%  <concept_significance>500</concept_significance>
+% </concept>
+%</ccs2012>  
+%\end{CCSXML}
+%\ccsdesc[500]{TBD~TBD}
 
-\ccsdesc[500]{TBD~TBD}
 
-
-\keywords{ACM proceedings, \LaTeX, text tagging}
-
+%\keywords{ACM proceedings, \LaTeX, text tagging}
 
 \maketitle
 
-\input{samplebody-conf}
+\input{body}
 
 \bibliographystyle{ACM-Reference-Format}
-\bibliography{sample-bibliography} 
+\bibliography{references} 
 
 \end{document}
