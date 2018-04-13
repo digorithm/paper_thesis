@@ -1,13 +1,13 @@
 # Fdb version 3
-["bibtex main"] 1521066512 "main.aux" "main.bbl" "main" 1521066514
+["bibtex main"] 1521739545 "main.aux" "main.bbl" "main" 1521743067
   "./ACM-Reference-Format.bst" 1505962855 81890 d0c962ee7b00c892f073ec6439091590 ""
-  "main.aux" 1521066513 10631 b66e55285819915cad0886c94a55bbdc ""
+  "main.aux" 1521743066 11025 a4ca46a8a356fb0480c95f20488f01bb ""
   "main.bcf" 0 -1 0 ""
-  "sample-bibliography.bib" 1521064145 37372 26f8e8a6486bacf578c143aa12b5a015 ""
+  "sample-bibliography.bib" 1521650978 37935 d4805ba661220fbb42dbafa58327667b ""
   (generated)
-  "main.blg"
   "main.bbl"
-["pdflatex"] 1521066512 "/home/rodrigo/Dropbox/ubc/thesis/thesis/main.tex" "main.pdf" "main" 1521066514
+  "main.blg"
+["pdflatex"] 1521743065 "/home/rodrigo/Dropbox/ubc/thesis/thesis/main.tex" "main.pdf" "main" 1521743067
   "/etc/texmf/web2c/texmf.cnf" 1487370326 1101 af7716885e081ab43982cab7b4672c1a ""
   "/home/rodrigo/Dropbox/ubc/thesis/thesis/main.tex" 1520884794 3523 1db3093da1d7272646d2cba7ff0d4bc8 ""
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc" 1165713224 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
@@ -337,14 +337,14 @@
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1508776900 3822875 03fdee840f4108bbafef9658b49b24ea ""
   "acmart.cls" 1506958560 86488 eedab77403b94bf67a929208be32e074 ""
   "images/finch_user_perspective.jpg" 1518029725 39176 06455ba2e2af02dc2b4c3df22c6d2228 ""
-  "main.aux" 1521066513 10631 b66e55285819915cad0886c94a55bbdc ""
-  "main.bbl" 1521066512 23635 631ce4f4c998cb2e9114011726b7f403 "bibtex main"
-  "main.out" 1521066513 4231 596776737aa9a8bb67f4461660df5c40 ""
+  "main.aux" 1521743066 11025 a4ca46a8a356fb0480c95f20488f01bb ""
+  "main.bbl" 1521739546 24421 566b2a1c8790797c2a86697bef3eb74e "bibtex main"
+  "main.out" 1521743066 4494 0601187971808c91f9a70c19387495ba ""
   "main.tex" 1520884794 3523 1db3093da1d7272646d2cba7ff0d4bc8 ""
-  "samplebody-conf.tex" 1521066504 43139 5f88d2d754852c89415f6a6400d6f581 ""
+  "samplebody-conf.tex" 1521743065 45269 cdd80f6a978d61df7fe73098f651b3a8 ""
   (generated)
-  "main.pdf"
-  "main.aux"
   "main.out"
-  "main.log"
   "comment.cut"
+  "main.pdf"
+  "main.log"
+  "main.aux"
