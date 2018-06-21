@@ -30,6 +30,14 @@
 \usepackage{grffile}
 \usepackage{pgfplotstable}
 \usepackage[linesnumbered,ruled]{algorithm2e}
+\usepackage{listings}
+\lstset{
+  basicstyle=\ttfamily,
+  columns=fullflexible,
+  frame=single,
+  breaklines=true,
+  postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
+}
 \newcommand\mycommfont[1]{\footnotesize\ttfamily\textcolor{blue}{#1}}
 \SetCommentSty{mycommfont}
 \newcommand{\projectname}{Finch}

@@ -372,7 +372,34 @@ Here we talk about the constant retraining of the models, since we will have dat
 
 \subsection{Propagating adaptation plans}
 
-\section{Implementation}
+\section{Architecture and implementation}
+
+\begin{figure*}[t]
+  \includegraphics[scale=0.5]{images/FinchArchitecture.png}
+  \caption{\projectname{}'s workflow architecture}
+  \label{fig:finch2}
+\end{figure*}
+
+\projectname{}'s runtime spawns two main lightweight threads, which in Go (commonly referred as Golang) is called Goroutine. These two Goroutines are two observer threads. The first one is responsible for periodically building the dataset. It will, every $X$ minutes, where $X$ is configurable by the user, extract all collected metrics from Prometheus through its HTTP API, parse this data, and save the dataset. Then, it calls the machine learning component to train the models using this dataset, all models, scaler, and encoders---necessary components to make predictions---are persisted on disk.
+
+The second Goroutine is responsible for monitoring the current state of the system by querying Prometheus every short period of time, and checking the APDEX score. Upon violation of an SLA, it calls the machine learning component, uses the most recently trained models to predict the best optimal knobs, then call each respective adaptation method responsible for changing that knob in the target system.
+
+All infrastructure and main components of \projectname{} was built using Golang, due to its excellent performance and ease to build distributed and concurrent systems. However, Python was used to handle the machine learning components for its simplicity to quickly prototype and build mathematical models and experiments.
+
+The interoperability between Golang and Python was done by giving \projectname{}'s main components control over the machine learning component (written in Python). Because the machine learning component exposes a simple API, the main components use this API through executing bash commands. For instance:
+
+\begin{lstlisting}
+func predictOptimalKnobs(){
+  cmd := Exec.command("python", "-c", "FinchML.predict_optimal_knobs")
+  out, err := cmd.CombinedOutput()
+  // out holds the optimal knobs
+}
+\end{lstlisting}
+
+% TALK about that "propagation" effect or something like it.
+
+\subsection{Adaptation methods}
+
 
 \section{Evaluation}
 
