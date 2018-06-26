@@ -1,0 +1,16 @@
+\begin{appendices}
+\chapter{More on why using Go and Python}
+Companies usually try to enforce homogeneous codebases, in other words: using a single language or the minimum possible number of languages, to both make it easier to maintain the codebase and to make it easier to hire engineers.
+
+However, in this work we have decided to use 2 languages, the reason for that is that we believe we should use the right tools for a given job.
+
+Machine learning tooling in Python is complete and backed by a strong community, the fact that Python is a dynamically typed languages makes total difference when performing data science experiments; we usually need to add and remove features as quickly as possible, and this can become very time demanding in a statically typed language with strict policies.
+
+On the other hand, distributed and concurrent programming in Golang is as natural as the language itself can be; after all, these programming constructs are embedded in the language. Enforcing reliability in a system built in Golang is significantly easier than in systems built in Python.
+
+And since \projectname{} needs to provide reliability, speed, and a fast way to experiment with machine learning using an arbitrary dataset, using Python for machine learning and wrapping its service and provide a solid infrastructure using Golang was the way to go.
+
+The communication between these two components could be done using many common strategies such as exposing the machine learning service as a REST API, or using gRPC. However, that would introduce unnecessary complexities such as an HTTP and/or TCP layer, where all the communication between them is going to happen in the same machine---at least for now. Thus, exposing the machine learning component through a clean CLI-like API, and controlling it in Golang using Bash is the easiest and fastest way to achieve this communication.
+
+% TODO: create image graph to illustrate this
+\end{appendices}

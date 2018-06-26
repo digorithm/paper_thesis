@@ -2,6 +2,8 @@
 
 \usepackage{booktabs} % For formal tables
 
+\usepackage[toc,page]{appendix}
+
 
 % remove next three lines for CRC
 % Removes citation information below abstract
@@ -91,7 +93,7 @@ Due to the advancement in distributed systems and the increasing industrial dema
 
 In this work we show the design and analysis of a pragmatic machine learning based tool that aims to assist the engineering of systems that can: 1) Monitor themselves, 2) Forecast workloads and performance metrics and 3) Change themselves in run-time by self-configuring and adapting for a specific scenario. After the integration of this tool with a system, it should be able to answer the question: given that we have many configuration parameters, how can we change them in order to optimize a certain metric for a given predicted workload?
 
-We show that it can decrease the risk of changing systems' configurations in run-time and decrease the engineering effort that otherwise would be spent manually optimizing parameters, usually following a trial-and-error approach.
+We show that \projectname{} can decrease the risk of changing systems' configurations in run-time and decrease the engineering effort that otherwise would be spent manually optimizing parameters, usually following a trial-and-error approach.
 
 \end{abstract}
 
@@ -117,6 +119,7 @@ We show that it can decrease the risk of changing systems' configurations in run
 \maketitle
 
 \input{body}
+\input{appendix}
 
 \bibliographystyle{ACM-Reference-Format}
 \bibliography{references} 

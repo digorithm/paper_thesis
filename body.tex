@@ -12,7 +12,7 @@ Our approach consists of providing ways to inject a control loop to an existing 
 
 The tool not only provides reactive adaptations---adaptations that happen only when a constraint is violated---but also provides ahead-of-time adaptation plans that can be executed before a violation happens. This is achieved by predicting the context of the observed system.
 
-In summary, our main contributions are:
+Our main contributions are:
 
 \begin{itemize}
   \item Providing a methodology to assist the development and evolution of self-adaptive systems, regardless of the presence of self-adaptability in the system's foundations. Such methodology is encapsulated in the tool described in this work.
@@ -386,7 +386,7 @@ The second Goroutine is responsible for monitoring the current state of the syst
 
 All infrastructure and main components of \projectname{} was built using Golang, due to its excellent performance and ease to build distributed and concurrent systems. However, Python was used to handle the machine learning components for its simplicity to quickly prototype and build mathematical models and experiments.
 
-The interoperability between Golang and Python was done by giving \projectname{}'s main components control over the machine learning component (written in Python). Because the machine learning component exposes a simple API, the main components use this API through executing bash commands. For instance:
+The interoperability test between Golang and Python was done by giving \projectname{}'s main components control over the machine learning component (written in Python). Because the machine learning component exposes a simple API, the main components use this API through executing bash commands. For instance:
 
 \begin{lstlisting}
 func predictOptimalKnobs(){
