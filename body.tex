@@ -416,15 +416,35 @@ In the next subsection we discuss the setup for the experiment of the tool and t
 
 \subsection{Experiment}
 
-To evaluate the tool and the techniques here discussed, we used a toy web application as the target system of \projectname{}. Although simple, this web application capture most commonly seen complexities, here is a brief description of it:
+To evaluate the tool and the techniques here discussed, we developed a simple web service as the target system of \projectname{}. Although simple, this web service capture most commonly seen complexities, here is a brief description of it:
 
 \begin{itemize}
   \item It consists of the backend component that holds all the core logic of the application.
-  \item The application's services are exposed through many HTTP endpoints that follow a REsT API approach. In our scenario, these endpoints are subject to a set of Service Level Objectives. For instance, \textit{endpoint\_A\_POST} is a HTTP POST endpoint for the service $A$, and it should not take more than $X ms$ to respond.
+  \item The application's services are exposed through many HTTP endpoints that follow a REST API approach. In our scenario, these endpoints are subject to a set of Service Level Agreements measured using APDEX. For instance, \textit{endpoint\_A\_POST} is a HTTP POST endpoint for the service $A$, and $X\%$ of all requests to it should not take more than $X ms$ to respond.
   \item This backend is containerized with Docker.
   \item Another Docker container holds a Postgres database used by the application.
   \item At last, another Docker container holds \projectname{} itself, including the vendors' tools used by it---Prometheus, for instance.
 \end{itemize}
+
+The reason why we had to develop our own target system, this web service, is that we needed a production-like web service exposed through a REST API. Since these types of systems are in fact a product, it is very hard to find these as open source, and the ones that you find are usually a simple proof of concept of a tool, for example: a web framework, with very few endpoints and simple business logic, which is not realistic enough to test \projectname{}.
+
+\subsubsection{Initial training phase with workload simulation}
+
+% Not sure if this subsection should go here or implementation details
+
+\projectname{} starts making accurate and useful predictions after we have a dataset of reasonable size. In other words, the user must leave \projectname{} running for a while so that it can learn patterns in the target system and its workload. For that to happen in our experiment, we needed workload in our target system, however, since this is not a system in production, we needed to simulate a realistic workload with fluctuations (high and low workloads depending on day and time) and realistic and expected calls to the service's API based on use cases, for instance: a user could browse some shopping items, add them to the shopping card, go back and forth adding and removing shopping items, then she would go to the checkout page, and finalize the shopping session.
+
+We created a workload simulation to mimic these use cases.
+
+\subsubsection{Initial experiment with artificially generated knobs}
+
+This first experiment intended to answer the following question: \emph{Can \projectname{} infer the optimal set of configuration knobs without being explicitly programmed to do so?}
+
+To validate and answer this initial question, we needed not to focus on implementation details of the actual configuration changing, for example, gracefully handling Docker's containers and Postgresql restarts.
+
+To achieve this, we created a script that randomly (and temporarily) generates blocking points in the target system, these blocking points block the flow in the code for either $B_i$ milliseconds or $\frac{1}{B_i}$ milliseconds for each blocking point $B \in 1 \dots i$. These $B_i$ values are now our configuration knobs that affect the performance of the target system. Thus, if \projectname{} can perform its workflow---monitor, analyze, predict, and execute the adaptation plan---and correctly configure the knobs in such a way that the performance will be optimal, again, without being explicitly programmed for this task, then we validate the architecture of \projectname{} is achieving its goals and that predicting actual configuration knobs is a matter of dataset quality, and thus, time to learn correctly.
+
+We ran 3 different sets of artificially generated knobs and studied \projectname{} performance on them. (Here we show this data)
 
 % The goal of this subsub is to motivate the use of the tool and techniques. We must show that default and static configurations cannot serve different scenarios
 \subsubsection{The challenging task of configuring a Postgres database}
