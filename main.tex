@@ -45,6 +45,26 @@
 \SetCommentSty{mycommfont}
 \newcommand{\projectname}{Finch}
 
+% for commenting and making it visible in the pdf (easy to hide after)
+\newboolean{hidecomments}
+\setboolean{hidecomments}{false}
+%\nochangebars
+\ifthenelse{\boolean{hidecomments}}
+{\newcommand{\cb}[2]{}}
+{\newcommand{\cb}[2]{
+    \fbox{\bfseries\sffamily\scriptsize#1}
+    {\sf\small$\blacktriangleright$ %$\RHD$
+      {#2} $\blacktriangleleft$}}} %\LHD$}}}%
+\newcommand\ra[1]{\cb{RA}{\textcolor{red}{#1}}}
+\newcommand\rth[1]{\cb{RH}{\textcolor{green}{#1}}}
+
+\newcommand{\inlquo}[1]{``\textit{#1}''}
+\newcommand{\inlquoP}[2]{``\textit{#1}'' \textit{(#2)}}
+\newcommand{\quo}[2]{\\[0.1cm]\noindent ``\textit{#1}'' \textit{(#2)}\vspace*{0.1cm}}
+\newcommand{\quoWSp}[2]{\noindent ``\textit{#1}'' \textit{(#2)}}
+
+
+
 % DOI
 %\acmDOI{10.475/123_4}
 % ISBN
@@ -90,11 +110,11 @@
 
 
 \begin{abstract}
-Due to the advancement in distributed systems and the increasing industrial demands, software systems contain multiple components with complex interactions, e.g databases and their replication, caching components, proxies and load balancers, application instances and their complex configuration parameters. The engineers in a project must thinker with many configuration parameters that change the behavior and/or structure of the system, this can cause many problems that affect the quality of the service. In other words, dealing with high dimensionality is both cognitively demanding and risky for the project.
+Due to the advancement in distributed systems and the increasing industrial demands, software systems contain multiple components with complex interactions, e.g databases and their replication, caching components, proxies and load balancers, application instances and their complex configuration parameters. The engineers in a project must tinker with many configuration parameters that change the behaviour and/or structure of the system, this can cause many problems that affect the quality of the service in unexpected ways. \rth{what high dimensionality? slight disconnect between these two sentences} Dealing with high dimensionality is both cognitively demanding and risky for the project.
 
-In this work we show the design and analysis of a pragmatic machine learning based tool that aims to assist the engineering of systems that can: 1) Monitor themselves, 2) Forecast workloads and performance metrics and 3) Change themselves in run-time by self-configuring and adapting for a specific scenario. After the integration of this tool with a system, it should be able to answer the question: given that we have many configuration parameters, how can we change them in order to optimize a certain metric for a given predicted workload?
+In this work we show the design and analysis of a pragmatic machine learning-based tool, called \projectname{}, that assists the engineering of systems that: 1) Monitor themselves, 2) Forecast workloads and performance metrics, and 3) Adapt their configurations at runtime to respond to changing system loads. After adopting \projectname{}, systems are able to dynamically modify their configuration parameters to optimize a specific metrics for their dynamic workloads.
 
-We show that \projectname{} can decrease the risk of changing systems' configurations in run-time and decrease the engineering effort that otherwise would be spent manually optimizing parameters, usually following a trial-and-error approach.
+We show that \projectname{} can decrease the risk of changing system configurations at runtime, replacing the trial-and-error engineering effort that otherwise would be spent manually optimizing a system's wide array of configuration parameters with an automated self-adaptive system.
 
 \end{abstract}
 
