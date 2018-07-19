@@ -3,7 +3,7 @@
 \section{Introduction}
 \label{sec:introduction}
 
-The industrial adoption of microservices has led to increasingly complex configuration schemes that are manually fine-tuned by engineers. Ganek and Corbi discussed the need for autonomic computing to handle the complexity of managing software systems~\cite{ganek_dawning_2003}. They noted that managing complex systems has become too costly, prone to error, and labour-intensive because pressured engineers make mistakes, increasing the potential of system outages with a concurrent impact on business. This has driven many researchers to study self-adaptive systems (e.g., \cite{porter_rex:_2016, andrew_pavlo_self-driving_2017, salehie_self-adaptive_2009, ganapathi_predicting_2009, herbst_self-adaptive_2014, faniyi_architecting_2014}); however, the software industry still lacks practical tools to provide self-adaptation mechanisms to their systems\rth{should we soften this to be about self-adaptive system configurations? This would better match what came before and comes after.}. Thus, most system configuration and tuning is performed manually, often at runtime, which is known to be a very time consuming and risky practice \cite{ganek_dawning_2003, using_prob_reasoning_automate_software_tuning, de_lemos_software_2013}.
+The industrial adoption of microservices has led to increasingly complex configuration schemes that are manually fine-tuned by engineers. Ganek and Corbi discussed the need for autonomic computing to handle the complexity of managing software systems~\cite{ganek_dawning_2003}. They noted that managing complex systems has become too costly, prone to error, and labour-intensive because pressured engineers make mistakes, increasing the potential of system outages with a concurrent impact on business. This has driven many researchers to study self-adaptive systems (e.g., \cite{porter_rex:_2016, andrew_pavlo_self-driving_2017, salehie_self-adaptive_2009, ganapathi_predicting_2009, herbst_self-adaptive_2014, faniyi_architecting_2014}); however, \textcolor{blue}{the software industry still lacks practical tools to provide self-adaptive system configurations}. Thus, most system configuration and tuning is performed manually, often at runtime, which is known to be a very time consuming and risky practice \cite{ganek_dawning_2003, using_prob_reasoning_automate_software_tuning, de_lemos_software_2013}.
 
 In this work we present \projectname{}, a tool that enables engineers to integrate self-adaptation mechanisms into their systems. \projectname{} delegates the configuration and tuning of a system to a learned model, rather than requiring engineers to perform these operations manually or through manually tuned heuristics.
 
@@ -23,7 +23,7 @@ Our main contributions are:
   \item Presenting a case study that shows how a system's response time, throughput, and usage were improved by $A\%$, $B\%$, and $C\%$ respectively after the integration of \projectname{}.
 \end{itemize}
 
-Section 2 discusses past research in the space of self-adaptive systems and provides fundamental background for our approach. Section 3 outlines our approach, explaining the blend of ideas from different fields that lead to its principle design decisions. Section 4 describes \toolname{} and its implementation. Section 5 presents our case study, followed by a discussion and future directions in Section 6.
+Section 2 discusses past research in the space of self-adaptive systems and provides fundamental background for our approach. Section 3 outlines our approach, explaining the blend of ideas from different fields that lead to its principle design decisions. Section 4 describes \projectname{} and its implementation. Section 5 presents our case study, followed by a discussion and future directions in Section 6.
 
 %
 % here we reorganize these characteristics into the following terminology:
@@ -66,24 +66,26 @@ Section 2 discusses past research in the space of self-adaptive systems and prov
 
 \rth{need a .0 section here; aka: a sentence or two to describe why the 6 following subsections are the most relevant to your approach}
 
+\textcolor{blue}{}
+
 % Explanation for related work scheme: control theory, SE and mape-k => time series => ts for resources allocation => best ts forecasting approaches => workload simulation => hogna: almost what I wanted but not quite. plus: flawed => continuing on hogna: here's what didn't work and the differences => previous work are reactive, where's aot mape-k => peloton: like that but generic
 
 % note: it would be better to focus on ml applied to system, control theory + self-adapative community seems very fancy and annoying
 \subsection{Control theory in software engineering}
 
-The ideas in control theory have been widely adopted in the software engineering research community, with special attention to the Monitor-Analyze-Plan-Execute over a shared Knowledge, known as MAPE-K feedback loop, which proved to be a powerful tool to build self-adaptive systems \cite{arcaini_modeling_2015, salehie_self-adaptive_2009, Brun2013, computing_architectural_2006, kephart_vision_2003, de_lemos_software_2013}. Angelopoulos et al discussed the intersection between software engineering and control theory \cite{filieri2015software}. They showed how control-theoretical software systems are implemented and their design process, as well as the differences of the word ``adaptation'' in both fields. These works were shown to be invaluable to the development of \projectname{}. \rth{one sentence here saying why or how they were invaluable}
+The ideas in control theory have been widely adopted in the software engineering research community, with special attention to the Monitor-Analyze-Plan-Execute over a shared Knowledge, known as MAPE-K feedback loop, which proved to be a powerful tool to build self-adaptive systems \cite{arcaini_modeling_2015, salehie_self-adaptive_2009, Brun2013, computing_architectural_2006, kephart_vision_2003, de_lemos_software_2013}. Angelopoulos et al discussed the intersection between software engineering and control theory \cite{filieri2015software}. They showed how control-theoretical software systems are implemented and their design process, as well as the differences of the word ``adaptation'' in both fields. All These works were shown to be invaluable to the development of \projectname{}, \textcolor{blue}{because the injection of a MAPE-K loop into the target system is the core component of \projectname{}}.
 
 \subsection{Machine learning in control theory}
 
-The applications of machine learning in control theoretical models have been discussed in \cite{Gillula10_FusingMachineLearningControlTheory}, where the main idea is to take advantage of high performance of machine learning methods while using control theory to guarantee safety. Reinforcement learning \cite{Sutton:1998:IRL:551283} has similar goals to those in control theory, but with different approaches. \projectname{} uses ideas from machine learning, reinforcement learning, and control theory to enable self-adaptability. \rth{should we say specifically how? or maybe we just want to say why these approaches are the \emph{right} way to build finch (e.g., instead of hard-coded heuristics)}
+The applications of machine learning in control theoretical models have been discussed in \cite{Gillula10_FusingMachineLearningControlTheory}, where the main idea is to take advantage of high performance of machine learning methods while using control theory to guarantee safety and controllability. Reinforcement learning \cite{Sutton:1998:IRL:551283} has similar goals to those in control theory, but with different approaches. \projectname{} uses ideas from machine learning, reinforcement learning, and control theory to enable self-adaptability. \textcolor{blue}{Thus, instead of hard-coding configuration heuristics in a system, the control theory aspect of \projectname{} (the MAPE-K loop) uses machine learning techniques to learn patterns in the target system and make fast predictions in order to create adaptation plans.}
 
 \subsection{Time series analysis}
 
 Time series data has been used to analyze and predict patterns in data with respect to time, with applications on understanding how to efficiently allocate computational resources, which is a key strategy in our work to provide ahead-of-time adaptation.
 
-Between 2007 and 2011, many techniques for forecasting workload and performance metrics using time series data have been realized \cite{gmach2007workload, towards_autonomic_allocation, bobroff2007dynamic, meng2010efficient, caron2011pattern}. With these forecasts, they\rth{who is they?} provided methodologies for virtual machine allocation in data centres. These works did not focus on tools for applying machine learning to software systems nor on tools to enable self-adaptability in arbitrary software systems---which is our end goal.
+Between 2007 and 2011, many techniques for forecasting workload and performance metrics using time series data have been realized \cite{gmach2007workload, towards_autonomic_allocation, bobroff2007dynamic, meng2010efficient, caron2011pattern}. With these forecasts, they\rth{who is they?}\ra{The authors of the papers that I just referenced, I totally see how it's confusing as it is, how could I address this?} provided methodologies for virtual machine allocation in data centres. These works did not focus on tools for applying machine learning to software systems nor on tools to enable self-adaptability in arbitrary software systems---which is our end goal.
 
-Herbst et al. contributed with a survey of state-of-the-art forecasting approaches based on time series analysis and a decision-based technique to select the best forecasting method based on user-specified objectives \cite{herbst_self-adaptive_2014}. They provided a useful technique to reliably forecast workload and performance metrics based on time series analysis, which is an important component in our tool. To enable self-adaptation in a system is to first understand the patterns in its context over time.\rth{like prior paras, tie this back to finch}
+Herbst et al. contributed with a survey of state-of-the-art forecasting approaches based on time series analysis and a decision-based technique to select the best forecasting method based on user-specified objectives \cite{herbst_self-adaptive_2014}. They provided a useful technique to reliably forecast workload and performance metrics based on time series analysis, which is an important component in our tool. To enable self-adaptation in a system is to first understand the patterns in its context over time. \textcolor{blue}{ In \projectname{} we use these ideas and techniques to forecast workloads that, with the current configuration, could lead to SLA violations. Thus, enabling \projectname{} to create an adaptation plan for this forecast and schedule the adaptation carry out.}
 
 \subsection{Workload modelling}
 
@@ -91,11 +93,11 @@ Another important aspect of \projectname{} is being able to simulate workload in
 
 \subsection{Self-adaptive systems}
 
-Cornel Barna et al proposed Hogna, a platform for deploying self-adaptive applications in cloud environments \cite{barna_hogna:_2015}. Hogna provides a framework that abstracts deployment details, for example: spinning-off and managing instances on Amazon EC2 or OpenStack, enabling the user to focus on the adaptation mechanism. A key difference between Hogna and \projectname{} is that \projectname{} is not a deployment framework, but rather a library that assists the implementation of a MAPE-K closed loop by abstracting formal modelling to a machine learning model that can be matched with the specified SLO goals, instrumented data, and identified knobs\rth{this is the first time we talk about knobs, should we instead stick to 'configuration parameters' at this point?} of the system.
+Cornel Barna et al proposed Hogna, a platform for deploying self-adaptive applications in cloud environments \cite{barna_hogna:_2015}. Hogna provides a framework that abstracts deployment details, for example: spinning-off and managing instances on Amazon EC2 or OpenStack, enabling the user to focus on the adaptation mechanism. A key difference between Hogna and \projectname{} is that \projectname{} is not a deployment framework, but rather a library that assists the implementation of a MAPE-K closed loop by abstracting formal modelling to a machine learning model that can be matched with the specified SLAs, instrumented data, and identified configuration parameters of the system.
 
 \projectname{} can be used either for managing adaptive deployment schemes or optimizing finer-grained knobs of a system, for instance, optimizing configuration knobs of a Postgres instance used by a system in order to improve performance and prevent SLO violations---which is our case study in this paper. In addition to that, a minor difference between these two tools is how much is asked from the user; Hogna asks for a configuration file that describes the topology to be deployed, monitors to use, and more related settings, custom java classes to handle specific behaviours, and PXL file with the model description and a configuration file for Kalman filters, whereas \projectname{} requires fewer actions from the user, while enabling self-adaptability and giving flexibility to the user: it can be used both for higher level tasks---deployment---and lower level tasks---self-tuning and self-configuring of smaller pieces of software.
 
-All previously cited research approach the adaptation problem with reactive strategies: when a violation occurs---the service gets slower, errors are thrown---an adaptation is triggered and executed, stabilizing the system\rth{this is a strong statement, if it is right we are fine, but we could just say 'most previous work'}. \projectname{} is capable of providing the same style adaptation, while providing ahead-of-time adaptation: we use time-series analysis to create an adaptation plan for a future time, executing it right before a violation occurs, mitigating the risk of a potential SLO violation. 
+Most previous work approaches the adaptation problem with reactive strategies: when a violation occurs---the service gets slower, errors are thrown---an adaptation is triggered and executed, stabilizing the system. \projectname{} is capable of providing the same style adaptation, while providing ahead-of-time adaptation: we use time-series analysis to create an adaptation plan for a future time, executing it right before a violation occurs, mitigating the risk of a potential SLO violation. 
 
 Andrew Pavlo et. al. presented Peloton, a database system designed for autonomous operation~\cite{andrew_pavlo_self-driving_2017}. Similar to \projectname{}, one of their main goals was to decrease the need for manually-performed operations, though they focused solely on applying their ideas and techniques to their DBMS implementation. They achieved this by classifying the workload trends, collecting monitoring data, and forecasting resource utilization, then training a model based on this data to predict the best optimization plan. These ideas are important to our work, the key difference is that instead of directly embedding these ideas in a specific system---in this case a DBMS---and requiring the autonomous components to be tightly coupled to the system being configured, we are embedding a subset of these ideas in a tool that can be integrated in any arbitrarily chosen software system.
 
@@ -377,6 +379,95 @@ This procedure will create adaptation plans for a short time window, executing a
 Here we talk about the constant retraining of the models, since we will have data coming in all the data, so lots of corrections to be made.
 
 \subsection{Propagating adaptation plans}
+
+\subsection{Using \projectname{}}
+
+Because there are many ways of using \projectname{} as a library in a target system, there is no single right way to use. Here we illustrate how it was used in a scenario where the target system is a HTTP REST service that uses Gorilla mux for its URL router and dispatcher, Viper for configuration management, Interpose for HTTP middleware, and Postgres as its main database.
+
+We start by instantiating and initializing \projectname{} where the target system does the same tasks in the codebase as shown in listing \ref{lst:systeminit}. The highlighted lines are the lines that were added to the target system. In the target system's entry point, the original $func New(config)$ will be normally called, but now it will also configure and initialize \projectname{}.
+
+Upon initialization, \projectname{} will try to find two JSON files, defined by the user, in the target system's root folder: one called finch\_sla.json, which will describre each SLA for the target system, as shown in listing \ref{lst:finchsla}, an SLA description example is shown in listing \ref{lst:finchslaexample}, and finch\_knobs.json which will describe the name and value of each configuration parameter as an array of key/value.
+
+The next step is to intercept the logging mechanism and inject \projectname logging API in order to log the necessary data to train the dataset, analyze the context of the target system, and make predictions. This is done by creating a logging middleware that uses Finch's logging API, as shown in listing~\ref{lst:finchlog}, and then adding it to the middleware used by the target system, as shown in listing~\ref{lst:middleware}. With that done, all requests to this service will be analyzed by \projectname{} so that it can perform its tasks.
+
+\begin{lstlisting}[float,floatplacement=H,escapechar=;,caption={Initializing the target system and Finch},label={lst:systeminit}]
+func New(config *viper.Viper) (*Application, error) {
+	;\sethlcolor{soulgreen}\hl{Finch := finchgo.NewFinch()};
+	
+	;\sethlcolor{soulgreen}\hl{Finch.InitMonitoring()};
+
+	dsn := config.Get("dsn").(string)
+	
+	db, err := sqlx.Connect("postgres", dsn)
+	if err != nil {
+		return nil, err
+	}
+
+	cookieStoreSecret := config.Get("cookie_secret").(string)
+
+	app := &Application{}
+	app.config = config
+	app.dsn = dsn
+	app.db = db
+	app.db.SetMaxIdleConns(10)
+	app.sessionStore = sessions.NewCookieStore([]byte(cookieStoreSecret))
+	return app, err
+}
+\end{lstlisting}
+
+\begin{lstlisting}[float,floatplacement=H,escapechar=;,caption={Defining logging middleware for Finch's logging},label={lst:finchlog}]
+func Log(Finch *finchgo.Finch) func(http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+			// Inject monitoring loop
+			Finch.MonitorWorkload(r.Method, r.basePath)
+			Finch.MonitorLatency(r)
+			Finch.MonitorKnobs()
+		})
+	}
+}
+\end{lstlisting}
+
+\begin{lstlisting}[float,floatplacement=H,escapechar=;,caption={Injecting Finch's logging middleware into target system's HTTP middleware},label={lst:middleware}]
+func (app *Application) MiddlewareStruct() (*interpose.Middleware, error) {
+	middle := interpose.New()
+	middle.Use(middlewares.SetDB(app.db))
+	middle.Use(middlewares.SetSessionStore(app.sessionStore))
+	;\sethlcolor{soulgreen}\hl{	middle.Use(middlewares.Log(Finch))};
+
+	middle.UseHandler(app.Mux())
+
+	return middle, nil
+}
+}
+\end{lstlisting}
+
+\begin{lstlisting}[float,floatplacement=H,caption={finch\_sla.json describe each SLA in the target system},label={lst:finchsla}]
+[
+  {
+    "sla": <SLA description>,
+    "endpoint": /<endpoint name>,
+    "method": PUT | POST | GET | DELETE,
+    "metric": latency | throughput,
+    "threshold": <Threshold number that defines what's an acceptable latency or throughput>,
+    "agreement": <Percentage number>
+  }
+]
+\end{lstlisting}
+
+\begin{lstlisting}[float,floatplacement=H,caption={Example of an SLA definition in finch\_sla.json},label={lst:finchslaexample}]
+[
+  {
+    "sla": "95% of the POST requests to Users should be under 150ms",
+    "endpoint": "/users",
+    "method": "POST",
+    "metric": "latency",
+    "threshold": 150,
+    "agreement": 95
+  }
+]
+\end{lstlisting}
 
 \section{Architecture and implementation}
 
