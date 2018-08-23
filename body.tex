@@ -3,27 +3,32 @@
 \section{Introduction}
 \label{sec:introduction}
 
-The industrial adoption of microservices has led to increasingly complex configuration schemes that are manually fine-tuned by engineers. Ganek and Corbi discussed the need for autonomic computing to handle the complexity of managing software systems~\cite{ganek_dawning_2003}. They noted that managing complex systems has become too costly, prone to error, and labour-intensive because pressured engineers make mistakes, increasing the potential of system outages with a concurrent impact on business. This has driven many researchers to study self-adaptive systems (e.g., \cite{porter_rex:_2016, andrew_pavlo_self-driving_2017, salehie_self-adaptive_2009, ganapathi_predicting_2009, herbst_self-adaptive_2014, faniyi_architecting_2014}); however, \textcolor{blue}{the software industry still lacks practical tools to provide self-adaptive system configurations}. Thus, most system configuration and tuning is performed manually, often at runtime, which is known to be a very time consuming and risky practice \cite{ganek_dawning_2003, using_prob_reasoning_automate_software_tuning, de_lemos_software_2013}.
+The industrial adoption of microservices has led to increasingly complex configuration schemes that are manually fine-tuned by engineers. Ganek and Corbi discussed the need for autonomic computing to handle the complexity of managing software systems~\cite{ganek_dawning_2003}. They noted that managing complex systems has become too costly, prone to error, and labour-intensive because pressured engineers make mistakes, increasing the potential of system outages with a concurrent impact on business. This has driven many researchers to study self-adaptive systems (e.g., \cite{porter_rex:_2016, andrew_pavlo_self-driving_2017, salehie_self-adaptive_2009, ganapathi_predicting_2009, herbst_self-adaptive_2014, faniyi_architecting_2014}); however, the software industry still lacks practical tools to provide self-adaptive system configurations. Thus, most system configuration and tuning is performed manually, often at runtime, which is known to be a very time consuming and risky practice \cite{ganek_dawning_2003, using_prob_reasoning_automate_software_tuning, de_lemos_software_2013}.
 
 In this work we present \projectname{}, a tool that enables engineers to integrate self-adaptation mechanisms into their systems. \projectname{} delegates the configuration and tuning of a system to a learned model, rather than requiring engineers to perform these operations manually or through manually tuned heuristics.
 
 Building self-adaptive systems is a major engineering challenge \cite{brun_engineering_2009}. \projectname{}'s proposal is to enable self-adaptation by giving the user the ability to inject the main components of a self-adaptive mechanism into an existing target system in a loosely-coupled fashion.
 
-One of our main goals is to provide self-adaptive configuration support with minimal engineer effort. \projectname{} uses ideas from system observability, machine learning, and control theory to automatically asses the system's environment, predict the impact of changes that could potentially improve the system, and make these changes automatically.
+\begin{figure}[!htb]
+	\includegraphics[scale=0.2]{images/finch.png}
+  \caption{How finch integrates into a target system; (1) Finch is injected into the target system, (2) it Monitors and analyzes the target system’s context, (3)Finch learns how to configure the target systems, (4) Interface executes configuration adaptation plans, adapting the target system.
+}
+  \label{fig:finch}  
+\end{figure}
 
-Our approach consists of providing mechanisms for injecting a control loop into an existing target system through an API for collecting relevant system metrics and configurations as the system executes. We map Service Level Agreements (SLAs) to a subset of these metrics, feed them into a machine learning component that is concurrently relearning the model while analyzing current event data which then predicts optimal configurations for the system for its given load. As a result, \projectname{} provides adaptation plans that can be both \emph{automatically executed}, allowing the system to have self-adaptive capabilities, and \emph{interpretable}, allowing engineers to understand the impact of a change in the configuration space before it is deployed.
+One of \projectname{}'s main goals is to provide self-adaptive configuration support with minimal engineer effort. \projectname{} uses ideas from self-adaptive systems, system observability, machine learning, and control theory to automatically asses the system's environment, predict the impact of changes that could potentially improve the system, and make these changes automatically.
 
-\projectname{} not only provides reactive adaptations---adaptations that happen only when a constraint is violated---but also provides predictive adaptation plans that can be executed before a violation occurs. This is achieved by predicting the context of the observed system.
+My approach consists of providing mechanisms for injecting a control loop into an existing target system through an API for collecting relevant system metrics and configurations as the system executes. The user maps Service Level Agreements (SLAs) to a subset of these metrics, feed them into a machine learning component that is concurrently relearning the model while analyzing current event data which then predicts optimal configurations for the system for its given context. As a result, \projectname{} provides adaptation plans that can be both \emph{automatically executed}, allowing the system to have self-adaptive capabilities, and \emph{interpretable}, allowing engineers to understand the impact of a change in the configuration space before it is deployed.
 
-Our main contributions are:
+The main contributions of this paper are:
 
 \begin{itemize}
-  \item A methodology for assisting the development and evolution of self-adaptive configuration systems, regardless of the presence of self-adaptability in the system's foundations. Such methodology is encapsulated in \projectname{}.
-  \item Demonstrating how minimal changes to the system can support this approach, and how SLAs/SLOs can be modelled and mapped to optimization objectives. %These tasks being the development cost incurred by the engineers.
-  \item Presenting a case study that shows how a system's response time, throughput, and usage were improved by $A\%$, $B\%$, and $C\%$ respectively after the integration of \projectname{}.
+  \item A methodology for assisting the development and evolution of self-adaptive systems, regardless of the presence of self-adaptability in the system's foundations. Such methodology is encapsulated in \projectname{}.
+  \item Demonstrating how minimal changes to the system can support this approach, and how Service-Level Agreements can be modeled and mapped to optimization objectives.
+  \item A group of experiments to evaluate \projectname{}'s performance when integrated into a web service, demonstrating how \projectname{} can learn how to configure it and improve its performance while incurring 8.5\% of performance overhead.
 \end{itemize}
 
-Section 2 discusses past research in the space of self-adaptive systems and provides fundamental background for our approach. Section 3 outlines our approach, explaining the blend of ideas from different fields that lead to its principle design decisions. Section 4 describes \projectname{} and its implementation. Section 5 presents our case study, followed by a discussion and future directions in Section 6.
+Chapter 2 discusses past research in the space of self-adaptive systems and provides fundamental background for our approach. Chapter 3 outlines the design and usage of \projectname{}, explaining the blend of ideas from different fields that lead to its principle design decisions. Chapter 4 describes \projectname{} and its implementation. Chapter 5 presents the evaluation performed on \projectname{}, followed by a discussion on limitations and future directions in Section 6.
 
 %
 % here we reorganize these characteristics into the following terminology:
@@ -64,7 +69,7 @@ Section 2 discusses past research in the space of self-adaptive systems and prov
 \section{Related work and foundations}
 \label{sec:rw}
 
-\rth{need a .0 section here; aka: a sentence or two to describe why the 6 following subsections are the most relevant to your approach}
+\projectname{} draws ideas from many different, although overlapping, fields. Here we discuss where these ideas come from and how they relate to \projectname{}.
 
 \textcolor{blue}{}
 
@@ -114,122 +119,137 @@ The idea of machine learning-enhanced software systems is to move from using the
 
 This is the main idea behind \projectname{}: the integration of learned models to generate adaptation plans according to the different scenarios.
 
-\section{Approach}
+\section{Design and Usage}
 \label{sec:approach}
 
 % This is a very important section, try to make it as clear as possible, the current version is not clear, it's just a brain dump. You can understand it because you see the end goal and the design, the readers do not
 
-Before diving into the implementation details, it is interesting to understand each conceptual piece in our approach. From a high-level view, our approach's workflow to turn a target system into a self-adaptive system (machine-learning enhanced system?) consists of:
-
+To integrate \projectname{} into the target system, the user has to do the following:
+ 
 \begin{itemize}
-  \item Instrumenting the target system
-  \item Detecting relevant configuration knobs
-  \item Defining Service Level Agreements for a subset of the instrumented data
-  \item Allowing configuration knobs to be changed programmatically
+  \item Instrument the target system
+  \item Identify relevant configuration parameters for \projectname{}
+  \item Define Service Level Agreements related to a subset of the instrumented data
+  \item Allow configuration parameters to be changed programmatically
 \end{itemize}
 
-These 4 steps (see figure \ref{fig:finch1}) will create the necessary environment for the target system and \projectname{} to implement a MAPE-K loop. In the following subsections we discuss the rationale behind these steps. 
-
-\begin{figure*}[t]
-  \includegraphics[width=\textwidth]{images/finch_user_perspective.jpg}
-  \caption{\projectname{}'s approach from a user perspective. The four necessary steps to change the target system into a self-adaptive system}
-  \label{fig:finch1}
-\end{figure*}
+These 4 steps will create the necessary environment to enable self-adaptation in the target system, by enabling \projectname{} to learn how to configure it. In the following sections we discuss in more details these steps and the design principles behind them.
 
 \subsection{\projectname{} as a self-adaptation enabler}
 
-In terms of self-adaptive systems, \projectname{} follows a centralized and top-down approach. According to the self-adaptive community, a centralized and top-down self-adaptive system operates with the guidance of a central controller, assesses its own behavior in the current surroundings, and adapts itself if the monitoring and analysis warrants it \cite{brun_engineering_2009}.
+According to the self-adaptive systems community, a centralized and top-down self-adaptive system operates with the guidance of a central controller. This controller assesses its own behavior with respect to its current surroundings, and adapts itself if the monitoring and analysis warrants it \cite{brun_engineering_2009}. Given this definition, we built \projectname{} to follow a centralized and top-down approach.
 
-The main design goal in \projectname{} is to allow its users to inject feedback loops---based on the classic MAPE-K loop---through its API. As discussed by Y. Brun et al, to reason about uncertainty effectively, we need to elevate feedback loops to be visible and first class \cite{brun_engineering_2009}. However, rather than hard wiring the self-adaptation mechanisms inside the target system, \projectname{} keeps it loosely-coupled; the target system and \projectname{} work together to collect data about target system's environment and states, then \projectname{} store this knowledge for future reference and models training, with learned models ready to make predictions, \projectname{} watches and analyze event data and, based on its internal feedback loop, spits executions plans that aim to optimize the target system, this adaptation will lead to more event data that will be continuously stored and analyzed, where the cycle repeats.
+The main design goal of \projectname{} is to allow its users to inject a MAPE-K feedback loop into their system through its API. To carry out an effective reasoning on the target system's context uncertainty, we need visible feedback loops that are first class citizens in the system, as discussed by Y. Brun et al \cite{brun_engineering_2009}. In industry, the self-adaptation mechanism is \emph{hard-wired} into the managed system most of the time. That is, they change the managed element's structure to fit the feedback loop into the target system.
 
-
-% TODO: add some more context on "challenges ahead" in Y. Brun's paper. With Finch, we are tackling HCI, reengineering, and middleware components of his defined challenges
+Of course, this requires a noticeable engineering effort; usually systems are not initially designed with self-adaptability in mind. This is where the \emph{injection} part of \projectname{} enters. Rather than hard wiring the self-adaptation mechanisms inside the target system, \projectname{} keeps it loosely-coupled. Upon integration into the target system, \projectname{} acts as a co-pilot and starts collecting data related to the system's context, environment, and states, storing this data for future reference and model training. After a certain time, with learned models ready to make predictions, \projectname{} starts analyzing event data. Guided by the internal feedback loop, it then carries out execution plans that aim to optimize the target system. The adaptation leads to more event data to be stored and analyzed, and the cycle repeats.
 
 \subsection{System's heuristics and configuration as a learning problem}
 
-A learning problem can be simply put as a set of observations comprised of input data and output data and some unknown relationship between the two, and the goal of a learning system is to learn a generalized mapping between input and output data such that predictions can be made for new instances drawn from the domain where the output variable is unknown.
+We can define \emph{learning problem} as a set of observations comprised of input and output data, and some unknown relationship between the two. The goal of a learning system is to learn a generalized mapping between input and output data, so that predictions can be made for new instances drawn from the domain where the output variable is unknown.
 
-The main hypothesis behind \projectname{} is that if we can model the configuration scheme or the heuristics of a system as a learning problem, then we can learn a model that can find patterns between the system's observations and the system's knobs---configuration knobs or the values used in heuristics that control the system's behaviors---enabling the system to predict the best set of knobs for a given specific observed scenario.
+The main hypothesis behind \projectname{} is that if we can model the configuration scheme or the heuristics of a system as a learning problem, then \projectname{} can learn models that capture patterns between the system's context and the system's configuration parameters, enabling the system to predict the optimal set of configuration parameters for a specific observed scenario. This prediction can be used to either adapt to different scenarios that require different configurations or to prevent poor configurations.
 
-Because machine learning is about learning to predict a certain behavior in the future based on what was experienced in the past, an important step when modelling a problem as a learning problem is the choice of observations used to train the system.
+To reiterate, machine learning is about learning to predict a certain behavior, based on what was experienced in the past. Thus, an important step when modeling a problem as a learning problem is the choice of observations used to train the system.
 
-In this context, observations could be anything that relates to the system's behavior, performance, inputs, and outputs. For instance: throughput, requests per second, latencies, and machine's resources usage---CPU and memory.
+In this work's context, observations could be anything that relates to the system's behavior, performance, inputs, and outputs. For instance: Throughput, requests per second, latencies, and machine's resources usage (CPU, memory, IO) are some examples for the aforementioned context.
 
-In \projectname{}'s case, it is important to give the necessary means to collect the best possible set of observations from the system and its environment. Thus, to model the system's heuristics and configuration as learning problem, \projectname{} assumes a system properly instrumented.
+In \projectname{}'s case, it is important that \projectname{} is provided with the necessary means to collect the best possible set of observations from the system and its environment. In order to model the system's heuristics and configuration as learning problem, \projectname{} assumes that the system is properly instrumented.
 
 \subsection{Learnable patterns in systems context}
 
-\subsubsection{System instrumentation}
+\projectname{}'s ultimate strategy is to enable self-configuration in the system it is integrated to. \projectname{} achieves this through learning exhibited patterns in the target system. In order to accomplish this, \projectname{} needs the user to properly instrument the target system. Thus, a solid foundation in system instrumentation and observability comes a long way with \projectname{}.
 
-The first step in our approach is to observe the system's behavior and context, this is an important technique to understand how a running system behaves; by having data that tells us how a system behaves under the combination of different workloads and different configuration knobs, we can see that interesting patterns emerge from this data.
+\subsubsection{Observability and System Instrumentation}
 
-Software instrumentation refers to pieces of code inserted in some parts of the system's codebase to record its context, for instance: the values of function parameters, latencies, and time to execute a certain block of code. The purpose of these pieces of code is to help measuring performance, debugging, finding bottlenecks, and similar tasks.
+In order to observe the system thoroughly yet efficiently, \projectname{} makes extensive use of modern observability and software instrumentation techniques. These techniques refer to code inserted in parts of the system's codebase to record its context. Function parameters, latencies, and time to execute a certain block of code are some values in a codebase that we can instrument. The purpose of collecting information from these pieces is, for instance, to help measure performance, assist debugging tasks, and find bottlenecks. In return, \projectname{} greatly benefited from the recorded values throughout the system.
 
-Luckily, the software industry has been enforcing system instrumentation by providing many solutions for software instrumentation and monitoring such as Dtrace \cite{cantrill_dynamic_2004}, Prometheus \cite{Prometheus}, Nagios \cite{Nagios}, and Datadog \cite{Datadog}.
+Any user who wants to integrate \projectname{} into their system needs to carry out such instrumentation of their target system. Luckily, the software industry has been enforcing system instrumentation by providing many solutions, such as Dtrace \cite{cantrill_dynamic_2004}, Prometheus \cite{Prometheus}, Nagios \cite{Nagios}, and Datadog \cite{Datadog}, so this requirement should not come across as an extra necessity, but a system requirement regardless of \projectname{}'s presence.
 
-Instrumentation is heavily used in industry also to detect Service Level Objectives (SLOs) violation and to perform resource management---two tasks that are crucial to \projectname{}.
+Instrumentation is also heavily used in industry  to detect Service-Level Agreement violations and to perform resource management---two tasks that are essential for \projectname{} to fulfill its purpose.
 
-Under \projectname{}'s layers all monitoring is performed using Prometheus. Prometheus is a pull-based monitoring tool and time-series database. A normal concern is: what is the overhead incurred by a pull-based monitoring tool? The answer to this question is straightforward: the overhead is negligible. Unlike monitoring tools like Nagios, which frequently executes check scripts, it only collects time series data from a set of instrumented targets over the network. For each target, the Prometheus server simply fetches the current state of all metrics of that target over HTTP and has no other execution overhead that would be pull-related.
+Under \projectname{}'s layers, all monitoring is done using Prometheus. Prometheus is a pull-based monitoring tool and a time-series database. A normal concern is the overhead incurred by a pull-based monitoring tool. However, the response to this concern is straightforward: The overhead is negligible. Unlike monitoring tools like Nagios, which frequently executes check scripts, Prometheus only collects time series data from a set of instrumented targets over the network. For each target, the Prometheus server simply fetches the current state of all the metrics over HTTP and has no other execution overhead that would be pull-related.
 
-Another reason why Prometheus overhead is low is that Prometheus is not an event-based system, it works by regularly collecting aggregated time series data that represents the current state of a given set of metrics, not the underlying events that led to the generation of those metrics. Thus, it does not send a message to Prometheus server for each request as it is handled, it simply count up those requests in memory---causing no monitoring overhead or traffic---then Prometheus pulls this data every few configurable seconds, returning the current counter value and its timestamp.
+\subsubsection{Measuring performance metrics}
 
-In this first step, what we ask from the users is to choose parts of their systems to instrument, more specifically, instrument parts that are closely related to performance and resource usage. What has showed to work for us---and for many practitioners in industry-- is to instrument: CPU usage, CPU idleness, memory usage, I/O writes per second, I/O reads per second, workload---it can be, for instance, requests per second---and latencies of desired services, for instance: the latency of each web service endpoint.
+A common mistake made in industry and in the research community is measuring performance ---especially latency or response time--- using averages. Averages hide outliers and are usually very skewed. To better illustrate this problem, let's consider the following scenario: Our target system receives 100 requests per minute, 80 of which take 200ms to serve, which is relatively fast. On the other hand, the remaining 20 requests take 10000ms (10 seconds). If we assess the performance of the system using the average, we'll evaluate the latency as $2.1$ seconds, which is an acceptable value. However, this value hides the fact that $20\%$ of our requests are taking 10 seconds, which is an unacceptable latency value.
 
-\subsubsection{Performance percentages and percentiles over average}
-
-A common mistake both in industry and in the research community is measuring performance---specially latency or response time---using averages. Averages hide outliers and it is usually very skewed. To better illustrate this problem, consider having 100 requests per minute to your target system, if 80 of these requests take 200ms, which is relatively fast, and 20 of these requests take 10000ms, or 10 seconds, your average is $2.1$ seconds, which is an acceptable latency. However, it hides the fact that $20\%$ of these requests are taking an unacceptable amount of time to be served.
-
-Rather than averaging performance metrics, \projectname{} takes three more reliable approaches to measure performance metrics:
+Rather than taking the average of performance metrics, \projectname{} takes three different approaches to measure performance metrics, which are more reliable than taking average:
 
 \begin{itemize}
-  \item Percentiles, such as 99th and 90th percentiles , in order to capture and understand outliers. This way we can understand upper bounds and uncover more silent bugs.
-  \item Agreements on a percentage of requests being served under an agreed threshold. For example, an agreement could be: \textit{$95\%$ of the POST requests to endpoint $A$ will be served under 200ms}. This is a good strategy because rather than focusing on averaging---which is not reliable---we focus on serving well a big portion of the requests. This synergizes well with histograms and buckets.
-  \item APDEX \cite{Apdex} as an extension on agreements.
+  \item Measuring percentiles, such as 99th and 90th, in order to capture outliers. This way we can understand upper bounds and uncover more silent failures of the performance metrics.
+  \item Using SLAs defined by the user to assess the performance metrics.  For example, an agreement could require \textit{$95\%$ of the POST requests to endpoint $A$ to be served under 200ms}. This is a good strategy because rather than taking the average of the POST requests, we focus on how well we served a big portion of the requests.
+  \item Using APDEX \cite{Apdex} as an extension on agreements.
 \end{itemize}
 
-APDEX is an industry standard that gives a score of satisfaction based on the latency or response time of requests. It is calculated by: $APDEX_T = \frac{S + \frac{T}{2}}{R}$. Where $T$ is a selected threshold, $S$ is the number of satisfied requests, or requests that take less than $T$ to be served, $T$ is the tolerated requests, or requests that take between $T$ and $T*4$ to be served, and $R$ is the total number of requests. A request is considered frustrated if it takes more than $T*4$ to be served.
 
-To compare APDEX to averaging latencies, think of two scenarios:
+APDEX is an industry standard that gives a score of satisfaction based on the latency or response time of requests. It is calculated by: $APDEX_T = \frac{S + \frac{Tol}{2}}{R}$, where $T$ is a selected threshold, $S$ is the number of satisfied requests, or requests that take less than $T$ to be served, and $R$ is the total number of requests. $Tol$ is the tolerated requests, or requests that take between $T$ and $T*4$ to be served, and $R$ is the total number of requests. A request is considered frustrated if it takes more than $T*4$ to be served.
+
+To compare APDEX score to taking the average, think of two scenarios:
 
 \begin{itemize}
   \item $60\%$ of the requests take $200ms$, $20\%$ of the requests take $10ms$, and $20\%$ of the requests take 10 seconds. The average of latencies in this case is $2.1s$, which gives you a false sense of confidence. The $APDEX_{2s}$ is $80\%$, which is considered low.
-  \item 1 request takes 5 minutes, 10 requests take 200ms. Here we have a case of anomalous latency. The average is 27 seconds, which is very high, whereas $APDEX_{2s}$ is $91\%$, telling us that, given our selected threshold, the situation is not bad, rather, it was just an anomalous case.
+  \item 1 request takes 5 minutes, 10 requests take 200ms. Here we have a case of anomalous latency. The average is 27 seconds, which is very high, whereas $APDEX_{2s}$ is $91\%$. This $APDEX_{2s}$ score indicates the threshold we set, the situation is not bad, we just had an anomalous case.
   
 \end{itemize}
 
-\projectname{} uses APDEX agreements and 99th and 90th percentiles as features and targets when training the predictions models.
+\projectname{} uses APDEX agreements, and the 90th and 99th percentiles as features and targets when training the predictions models.
+
+To monitor the target system, \projectname{} provides a small API for it. As of now, this monitoring API consists of three methods; one for workload monitoring, another for latency monitoring, which takes the endpoint, the HTTP method, and the duration of the request, and a last one for configuration parameter monitoring, which after loading the file that contains the adaptive configuration parameters, it will put these values in memory and read from it.
+
+\subsubsection{Defining adaptive configurations}
+
+Now that \projectname{} collected data points that describe the performance and the behavior of the target system, the state of the configuration parameters at a given time should also be captured. \projectname{} asks the user to create a file containing adaptive configurations. An adaptive configuration parameter can be a property, parameter, or variable whose value controls a certain aspect of a system or an algorithm. \projectname{} tries to find the optimal value for this parameter in order to better configure the target system. The configurations can have a variety of values and depend highly on the kind of system the user is working with.
+
+There are two types of configuration parameters that can be defined by the user; normal configuration parameter and custom configuration parameter. Both are declared in an adaptive configuration JSON file.
+
+The normal configuration parameter holds its value both in memory and in the adaptive configuration file. When \projectname{} predicts the optimal configuration, it will change the parameter value both in-memory and in the adaptive configuration file. It assumes that the target system is reading from one of those sources, and thus, the adaptation is easily carried. The normal configuration parameter is defined by passing the name of the configuration parameter, the current value, and the possible values or range values. \ref{lst:normaladaptiveconfig} is an example of a normal configuration parameter definition.
 
 
-\subsubsection{Configuration knobs instrumentation}
+\begin{lstlisting}[float,floatplacement=H,caption={Example of a normal adaptive configuration definition},label={lst:normaladaptiveconfig}]
+[
+  "parameter_1": {
+    "value": 1000,
+    "valueType": "discrete",
+    "values": [1, 1000],
+    "isCustom": false
+  }
+]
+\end{lstlisting}
 
-Now that we have data points that describe the performance and behavior of our system, we have to capture the current state of the configuration knobs; it can range from a variety of configurations, and it is highly dependent on the kind of system you are dealing with. Here we define a configuration knob as a property, parameter, or variable that holds a value that controls a certain aspect of a system or algorithm.
+However, there are scenarios where a simple in-memory or changing the value in a file is not enough to change the configuration of an aspect of a system. For instance, to change some of Postgres configuration parameters, one must change the value on its configuration file and then restart the Postgres instance. \ref{lst:customadaptiveconfig} is an example of a custom configuration parameter definition.
 
-\subsubsection{Defining Service Level Agreements}
+\begin{lstlisting}[float,floatplacement=H,caption={Example of a custom adaptive configuration definition. Finch will call the procedure changeConfParam1 when it needs to change this specific configuration},label={lst:customadaptiveconfig}]
+[
+  "custom_param_1": {
+    "value": 1000,
+    "valueType": "discrete",
+    "values": [1000, 1],
+    "isCustom": true,
+    "adaptationMethod": "changeConfParam1"
+  }
+]
+\end{lstlisting}
 
-Having collected the instrumented data---data that represents the snapshot of both the configuration knobs and the performance at a given time---we have to point which of these instrumented data points are under service level agreements. Here we call these features Service Level Indicators (SLIs), they are a subset of the set of instrumented metrics that must satisfy a desired objetive, the SLA. 
-
-For instance, given that we instrumented the latency of the endpoint $A$ of our web service, it is agreed that $95\%$ of the requests to this endpoint should have latency below $200ms$. This is properly captured by \projectname{}'s API.
-
-% TODO: show formal language to capture this
-
+\projectname{}'s custom configuration parameters work in a way that assist this configuration changing process. When defining a custom configuration parameter, the user should also provide a procedure to be ran when an adaptation plan is carried that involves this configuration parameter. Upon adaptation, \projectname{} calls this procedure, passing the appropriate parameters. Using the Postgres example, the user can provide a procedure that changes the Postgres configuration file using arguments being passed to it and restart the instance. \projectname{} predicts the optimal configuration parameter, then calls this procedure passing the predicted value.
 
 \subsubsection{Resulting dataset}
 
-We have collected four sets of features: metrics related to the system's context---performance and behavior metrics---configuration knobs, the workload, and service level indicators that must satisfy their objectives. The goal for the collection of this data is to build a dataset that will be used later to train models that will be used to make prediction based on these three sets of features, and the models will be trained to answer the following question: \textit{given a workload---e.g requests per seconds--- and the performance metrics of the system serving these requests, what is the optimal set of configuration knobs that will prevent service level objective violations?}
+To construct the dataset, \projectname{} collects four classes of features on the target system; performance and behavior metrics, configuration parameters, the workload, and service level indicators. The goal of choosing these features was to gather a dataset that the machine learning models could be trained on, which would later make predictions based on these features. These particular features were chosen in order to answer the following question: \textit{Given the workload ---e.g requests per seconds--- and the performance metrics of the system, what is the optimal set of configuration knobs (parameters) that will prevent SLA violations, in this case, in the requests served?}
 
-The dataset is constructed in such a way that each row describes the context of the system---workload, metrics, SLIS, and configuration knobs---at a given time captured by a timestamp.
+The dataset is constructed in such a way that each row describes the context of the system ---workload, metrics, SLIs, and configuration knobs--- at a given timestamp.
 
 The following matrix summarizes how the dataset is organized:
 
 \setlength{\arraycolsep}{1pt}
 \renewcommand\arraystretch{1.0}
 \setcounter{MaxMatrixCols}{20}
+
 $$
 \begin{vmatrix}
-  t_1 & W_1 & M_{1_1} & M_{2_1} & \dots & M_{i_1} & k_{1_1} & k_{2_1} & \dots & k_{t_1} & SLI_{1_1} & SLI_{2_1} & \dots & SLI_{\delta_1}\\
-  t_2 & W_2 & M_{1_2} & M_{2_2} & \dots & M_{i_2} & k_{1_2} & k_{2_2} & \dots & k_{t_2} & SLI_{1_2} & SLI_{2_2} & \dots & SLI_{\delta_2}\\
+  t_1 & W_1 & M_{1_1} & M_{2_1} & \dots & M_{i_1} & k_{1_1} & k_{2_1} & \dots & k_{l_1} & SLI_{1_1} & SLI_{2_1} & \dots & SLI_{\delta_1}\\
+  t_2 & W_2 & M_{1_2} & M_{2_2} & \dots & M_{i_2} & k_{1_2} & k_{2_2} & \dots & k_{l_2} & SLI_{1_2} & SLI_{2_2} & \dots & SLI_{\delta_2}\\
   \vdots & \vdots & \vdots & \vdots & \ddots & \vdots & \vdots & \vdots & \ddots & \vdots & \vdots & \vdots & \ddots & \vdots \\
-  t_n & W_n & M_{1_n} & M_{2_n} & \dots & M_{i_n} & k_{1_n} & k_{2_n} & \dots & k_{t_n} & SLI_{1_n} & SLI_{2_n} & \dots & SLI_{\delta_n}\\
+  t_n & W_n & M_{1_n} & M_{2_n} & \dots & M_{i_n} & k_{1_n} & k_{2_n} & \dots & k_{l_n} & SLI_{1_n} & SLI_{2_n} & \dots & SLI_{\delta_n}\\
 \end{vmatrix}
 $$
 
@@ -237,158 +257,25 @@ Where:
 
 \begin{enumerate}
   \item $n$ is the number of collected samples
-  \item $t_{\phi}$ is the timestamp of the $\phi-th$ example
-  \item $M_{j_\phi}$ is the $j-th$ instrumented metric in timestamp $t_{\phi}$. $j$ ranges from $1$ to $i$, the last instrumented metric.
-  \item $k_{c_\phi}$ is the value in the $c-th$ configuration knob in timestamp $t_{\phi}$. $c$ ranges from $1$ to $t$, the last collected configuration knob.
-  \item $SLI_{o_\phi}$ is the $o-th$ service level indicator in the timestamp $t_{\phi}$---which is one of the instrumented metrics that was set to be an SLI. $o$ ranges from $1$ to $\delta$, the last collected SLI.
+  \item $t_{\phi}$ is the timestamp of the $\phi^{th}$ example
+  \item $M_{j_\phi}$ is the $j^{th}$ instrumented metric in timestamp $t_{\phi}$. $j$ ranges from $1$ to $i$, the last instrumented metric.
+  \item $k_{c_\phi}$ is the value in the $c^{th}$ configuration parameter in timestamp $t_{\phi}$. $c$ ranges from $1$ to $l$, the last collected configuration knob.
+  \item $SLI_{o_\phi}$ is the $o^{th}$ service level indicator in the timestamp $t_{\phi}$---which is one of the instrumented metrics that was set to be an SLI. $o$ ranges from $1$ to $\delta$, the last collected SLI.
 \end{enumerate}
 
-This dataset should capture the context of a system with respect to workload, instrumented metrics, and the values in configuration knobs.  
+This dataset should capture the context of a system with respect to workload, instrumented metrics, and the values in configuration parameters.
 
-\subsection{Machine learning architecture}
+\subsection{Running \projectname{}}
 
-Given the previously defined dataset, \projectname{} trains many different models, each one targeting a different task. We have 2 ML pipelines: training the models, which also involves cross validating each model in isolation, and validating the prediction workflow: the workflow that triggers the interaction between the many models.
-
-\subsubsection{Training the models}
-
-There are two main classes of learned models:
-
-\begin{enumerate}
-  \item SLI models: these models predict, given the system's context, knobs values included, the SLI value. For instance, given the context, it outputs the latency of a certain endpoint. We will train a model for each collected SLI.
-  \item Knob models: these models predict, given the system's context, other knobs \textit{not} included, one SLI $s$ included, and others SLIs that are not $s$ excluded, the optimal knob value. For instance, it outputs the optimal knob $k$ to achieve a certain latency $x$. We will train a model for each combination of SLI and knob collected.
-\end{enumerate}
-
-The training of the different models consists of slicing the original dataset to fit the models' needs. For instance, when we want to predict the latency of endpoint $A$, we must say that latency $A$ is the target, or $y$, of the model, and the corpus, or $X$, is the rest of the dataset \textit{minus} the latency $A$ column. Then we train the model passing this specific $X$ and $y$.
-
-The algorithms \ref{alg:TrainSLIModels} and \ref{alg:TrainKnobModels} show with more details the process of training the models.
-\SetInd{0.75em}{0.1em}
-\begin{algorithm}
-  \SetAlgoNoLine
-  \caption{Trains a model for each SLI and return a list of models}\label{alg:TrainSLIModels}
-  \SetKwInOut{Input}{inputs}
-  \SetKwInOut{Output}{output}
-  \SetKwProg{TrainSLIModels}{TrainSLIModels}{}{}
-
-  \TrainSLIModels{$(Dataset)$}{
-    \Input{A dataset that contains the system's context}
-    \Output{$n$ SLI models, where $n$ is the number of collected SLIs}
-    $models \gets []$ \;
-    \ForEach{SLI $S \in Dataset$}{%
-      $y \gets Dataset[S]$\;
-      $X \gets Dataset \setminus Dataset[S]$\;
-      $regressor \gets learning\_algorithm(...)$\; 
-      $score \gets Cross\_validation(regressor, X, y$)\;
-      \If{($score \geq 70\%$)}{%
-        $models[S] \gets regressor.fit(X,y)$\;
-      }
-    }
-    \KwRet{models}\;
-  }
-\end{algorithm}
-
-Note that before training the final models, we cross validate the model with multiple---currently 100---splits of the dataset and performing the cross validation with 80/20 ratio: train with 80\% of the dataset, test with 20\% of the dataset, 100 times. This way we prevent cases of overfitting the model to the data.
-
-\begin{algorithm}
-  \SetAlgoNoLine
-  \caption{Trains a model for each Knob x SLI combination and return a 2D array containing the models}\label{alg:TrainKnobModels}
-  \SetKwInOut{Input}{inputs}
-  \SetKwInOut{Output}{output}
-  \SetKwProg{TrainKnobModels}{TrainKnobModels}{}{}
-
-  \TrainKnobModels{$(Dataset)$}{
-    \Input{A dataset that contains the system's context}
-    \Output{$i *j$ $SLI \Rightarrow Knob$ models, where $i$ is the number of collected SLIs and $j$ is the number of collected knobs}
-    $models \gets []$ \;
-    \ForEach{SLI $S \in Dataset$}{%
-      \ForEach{Knob $K \in Dataset$}{%
-        $y \gets Dataset[K]$\;
-        $X \gets Dataset \setminus Dataset[Knobs] \land Dataset[SLIs \neq S]$\;
-        $regressor \gets learning\_algorithm(...)$\; 
-        $score \gets Cross\_validation(regressor, X, y$)\;
-        \If{($score \geq 70\%$)}{%
-          $models[S, K] \gets regressor.fit(X,y)$\;
-        }
-      }    
-    }
-    \KwRet{models}\;
-  }
-\end{algorithm}
-
-\subsubsection{Validating the prediction workflow}
-
-The cross validation in algorithms \ref{alg:TrainSLIModels} and \ref{alg:TrainKnobModels} can only validate the accuracy of the each model in isolation. This is not enough to tell if the prediction workflow will work properly. For instance, one of our goals is to predict the best set of configuration knobs for a set of violated SLOs, so that after executing the adaptation plan, their respective SLIs will improve, preventing the SLO to be violated.
-
-To achieve this level of validation, we perform bidirectional predictions: we grab a sample from the dataset that contains many SLO violations, predict the optimal knobs that could prevent the violations, then, using the predicted knobs, we predict the SLIs and see if it indeed improved in comparison to the original SLIs from the bad sample. Algorithm \ref{alg:ValidatePredictionWorkflow} shows with more details how this procedure works. 
-
-\begin{algorithm}
-  \SetAlgoNoLine
-  \caption{Validates the prediction workflow by making bidirectional predictions. First we predict the best set of knobs given a bad scenario, then we predict the SLIs considering the predicted set of knobs}\label{alg:ValidatePredictionWorkflow}
-  \SetKwInOut{Input}{inputs}
-  \SetKwInOut{Output}{output}
-  \SetKwProg{ValidatePredictionWorkflow}{ValidatePredictionWorkflow}{}{}
-
-  \ValidatePredictionWorkflow{$(Dataset)$}{
-    $test \gets Dataset[0]$ \;
-    $X \gets Dataset[1:]$\;
-    $SLI\_models = TrainSLIModels(X)$\;
-    $knob\_models = TrainKnobModels(X)$\;
-    $knob\_predictions \gets []$ \;
-    \tcc{In this first foreach, we predict the optimal knob values for a sample with SLO violations}
-    \ForEach{SLI $S \in Dataset$}{%
-      $SLI\_test \gets test \setminus test[Knobs] \land test[SLIs \neq S]$\;
-      \ForEach{Knob $K \in Dataset$}{%
-        $pred \gets knob\_models[S,K].predict(SLI\_test)$
-        $knob\_predictions[S, K] \gets pred$ \;
-      }
-    }
-    $final\_knobs \gets$ most predicted set of knobs\;
-    \tcc{Next we predict SLIs given the predicted set of knobs}
-    $inverse\_test \gets test$ \;
-    \ForEach{Knob $K \in Dataset$}{%
-      $inverse\_test[K] \gets final\_knobs[K]$ \;
-    }
-    \ForEach{SLI $S \in Dataset$}{%
-      $knob\_test \gets inverse\_test \setminus inverse\_test[S]$ \;
-      Modify each remaining SLI value in $knob\_test$ to a value below its SLO \;
-      $predicted\_sli \gets SLI\_models[S].predict(knob\_test)$ \;
-      Validate that $predicted\_sli$ is below its SLO \;
-    }
-  }
-\end{algorithm}
-
-
-\subsection{Control-theoretic approach to self-adaptation}
-
-Here we talk first about the architecture with regards to MAPE-k and how we generate adaptation plans. Then we talk about creating adaptation plans for future workload, by predicting the workload using time-series data.
-
-\projectname{} offers a way to separate three main components in a traditional self-adaptive architecture: the monitoring process, the adaptation controller, and the management of control objectives (adaptation goals).
-
-\subsubsection{Ahead-of-time adaptation}
-
-As we showed before, the dataset contains the timestamp for each sample, meaning that we can take advantage of time-series analysis techniques to predict, given a certain time in the future, what will be the workload. Having the future workload in hands, we can use this data point to predict, like we did in the previous section, the best set of knobs based on the predicted SLIs.
-
-The key trick is that this plan for the optimal set of knobs will not be immediately carried out---the time for this adaptation has not come yet. It will, however, be stored in a table that contains all scheduled plans, and an observer will be watching this table and carrying out the plans a few minutes before the prediction for a given workload.
-
-Should it fail to predict the correct workload, it will, once again, predict the set of optimal knobs for the current workload and immediately carry out the plan.
-
-This procedure will create adaptation plans for a short time window, executing adaptations before they are needed, thus, before a violation occurs.
-
-
-\subsubsection{Online training}
-
-Here we talk about the constant retraining of the models, since we will have data coming in all the data, so lots of corrections to be made.
-
-\subsection{Propagating adaptation plans}
-
-\subsection{Using \projectname{}}
-
-Because there are many ways of using \projectname{} as a library in a target system, there is no single right way to use. Here we illustrate how it was used in a scenario where the target system is a HTTP REST service that uses Gorilla mux for its URL router and dispatcher, Viper for configuration management, Interpose for HTTP middleware, and Postgres as its main database.
+Because there are many ways of using \projectname{} as a library in a target system, there is no single right way to use. Here it is illustrated how it was used in a scenario where the target system is a HTTP REST service that uses Gorilla mux for its URL router and dispatcher, Viper for configuration management, Interpose for HTTP middleware, and Postgres as its main database.
 
 We start by instantiating and initializing \projectname{} where the target system does the same tasks in the codebase as shown in listing \ref{lst:systeminit}. The highlighted lines are the lines that were added to the target system. In the target system's entry point, the original $func New(config)$ will be normally called, but now it will also configure and initialize \projectname{}.
 
-Upon initialization, \projectname{} will try to find two JSON files, defined by the user, in the target system's root folder: one called finch\_sla.json, which will describre each SLA for the target system, as shown in listing \ref{lst:finchsla}, an SLA description example is shown in listing \ref{lst:finchslaexample}, and finch\_knobs.json which will describe the name and value of each configuration parameter as an array of key/value.
+Upon initialization, \projectname{} will try to find two JSON files, defined by the user, in the target system's root folder: one that describes each SLA for the target system, as shown in listing \ref{lst:finchsla}, an SLA description example is shown in listing \ref{lst:finchslaexample}, and another one which defines the adaptive configuration parameters, as shown in the previous section.
 
-The next step is to intercept the logging mechanism and inject \projectname logging API in order to log the necessary data to train the dataset, analyze the context of the target system, and make predictions. This is done by creating a logging middleware that uses Finch's logging API, as shown in listing~\ref{lst:finchlog}, and then adding it to the middleware used by the target system, as shown in listing~\ref{lst:middleware}. With that done, all requests to this service will be analyzed by \projectname{} so that it can perform its tasks.
+The next step is to intercept the logging mechanism and use \projectname{}'s logging API to log the necessary data to train the dataset, analyze the context of the target system, and make predictions. This is done by creating a logging middleware that uses Finch's logging API, as shown in listing~\ref{lst:finchlog}, and then adding it to the middleware used by the target system, as shown in listing~\ref{lst:middleware}. With that done, all requests to this service will be analyzed by \projectname{} so that it can perform its tasks.
+
+Initially, \projectname{} will work as passive co-pilot; it collects data, analyzes it, and frequently builds a dataset with this data. After a while, it starts training models on this dataset, and if the accuracy is acceptable, whenever there's an SLA violation, it will trigger configuration adaptation in order to try to improve the target system performance.
 
 \begin{lstlisting}[float,floatplacement=H,escapechar=;,caption={Initializing the target system and Finch},label={lst:systeminit}]
 func New(config *viper.Viper) (*Application, error) {
@@ -423,7 +310,7 @@ func Log(Finch *finchgo.Finch) func(http.Handler) http.Handler {
 			// Inject monitoring loop
 			Finch.MonitorWorkload(r.Method, r.basePath)
 			Finch.MonitorLatency(r)
-			Finch.MonitorKnobs()
+			Finch.MonitorConfigurationParameters()
 		})
 	}
 }
@@ -446,12 +333,12 @@ func (app *Application) MiddlewareStruct() (*interpose.Middleware, error) {
 \begin{lstlisting}[float,floatplacement=H,caption={finch\_sla.json describe each SLA in the target system},label={lst:finchsla}]
 [
   {
-    "sla": <SLA description>,
-    "endpoint": /<endpoint name>,
-    "method": PUT | POST | GET | DELETE,
-    "metric": latency | throughput,
-    "threshold": <Threshold number that defines what's an acceptable latency or throughput>,
-    "agreement": <Percentage number>
+    "sla": "<SLA description>",
+    "endpoint": "<endpoint name>",
+    "method": "PUT | POST | GET | DELETE",
+    "metric": "latency | throughput",
+    "threshold": "<Threshold number that defines what's an acceptable latency or throughput>",
+    "agreement": "<Percentage number>"
   }
 ]
 \end{lstlisting}
@@ -471,31 +358,169 @@ func (app *Application) MiddlewareStruct() (*interpose.Middleware, error) {
 
 \section{Architecture and implementation}
 
-\begin{figure*}[t]
-  \includegraphics[scale=0.5]{images/FinchArchitecture.png}
-  \caption{\projectname{}'s workflow architecture}
-  \label{fig:finch2}
-\end{figure*}
+This chapter discuss in more details how the main components of \projectname{} work. \projectname{} was built using the programming language Go, for its excellence with distributed and concurrent programming and its ease to construct reliable systems. Because \projectname{} needs to provide reliability, speed, and a fast way to experiment with machine learning using an arbitrary dataset, using Python for machine learning and wrapping its service and providing a solid infrastructure using Go was the best approach for this job.
 
-\projectname{}'s runtime spawns two main lightweight threads, which in Go (commonly referred as Golang) is called Goroutine. These two Goroutines are two observer threads. The first one is responsible for periodically building the dataset. It will, every $X$ minutes, where $X$ is configurable by the user, extract all collected metrics from Prometheus through its HTTP API, parse this data, and save the dataset. Then, it calls the machine learning component to train the models using this dataset, all models, scaler, and encoders---necessary components to make predictions---are persisted on disk.
+\subsection{Architecture overview}
 
-The second Goroutine is responsible for monitoring the current state of the system by querying Prometheus every short period of time, and checking the APDEX score. Upon violation of an SLA, it calls the machine learning component, uses the most recently trained models to predict the best optimal knobs, then call each respective adaptation method responsible for changing that knob in the target system.
+Prometheus is used to store the observed metrics and their respective timestamps. Prometheus is a time series database that also offers a very complete monitoring and alerting API. Thus, instead of implementing a time-series store from scratch, we decided to use Prometheus underneath \projectname{}, incurring an extra performance overhead. We discuss this performance overhead in chapter \ref{sec:evaluation}.
 
-All infrastructure and main components of \projectname{} was built using Golang, due to its excellent performance and ease to build distributed and concurrent systems. However, Python was used to handle the machine learning components for its simplicity to quickly prototype and build mathematical models and experiments.
+\projectname{}'s runtime spawns two main lightweight threads, which in Go is called Goroutine. These two Goroutines are two observer threads. The first one is responsible for periodically building the dataset. It will, periodically, extract all collected metrics from Prometheus through its HTTP API, parse this data, and save the dataset. Then, it calls the machine learning component to train the models using this dataset, all models, scaler, and encoders---necessary components to make predictions---are persisted on disk.
 
-The interoperability test between Golang and Python was done by giving \projectname{}'s main components control over the machine learning component (written in Python). Because the machine learning component exposes a simple API, the main components use this API through executing bash commands. For instance:
+The second Goroutine is responsible for monitoring the current state of the system by querying Prometheus every few seconds, and checking the the current SLO values. Upon violation of an SLA, it calls the machine learning component, uses the most recently trained models to predict the most optimal configuration, then calls each respective adaptation method responsible for changing its configuration in the target system.
+
+Both Goroutines are controlled by two variables: one that controls how often the dataset is constructed, and another one controls how frequently the current context is observed. The former has a significant impact on \projectname{}'s performance and is discussed in more details a later subsections.
+
+\subsection{The MAPE-K feedback loop}
+
+\begin{figure}[h]
+  \includegraphics[scale=0.5]{images/FinchMAPE.png}
+  \caption{\projectname{}'s ML-based MAPE-K feedback loop design. The knowledge base is composed of learned models. The monitor and plan components use machine learning techniques in order to build the dataset and create adaptation plans.}
+  \label{fig:finchMape}
+\end{figure}
+
+These two Goroutines running in loop compose the main abstraction of \projectname{}: the MAPE-K feedback loop.
+
+They communicate internally using Go's channels, which can be thought as pipes that connect concurrent Goroutines. The philosophy behind Go's channel is: share by communicating, not by sharing. Instead of sharing memory between threads, the sharing happens by sending messages between channels.
+Instead of handling concurrency by using mutex locks, it's favored by Go's community to use channels and messaging. This idea comes from Hoare's Communicating Sequential Processes \cite{hoare_communicating_1978}.
+This turned out to be helpful when implementing something highly concurrent as the MAPE loop in \projectname{}.
+
+The main loop spawns two other goroutines and control them with two different channels, as shown in the code below.
+
 
 \begin{lstlisting}
-func predictOptimalKnobs(){
-  cmd := Exec.command("python", "-c", "FinchML.predict_optimal_knobs")
-  out, err := cmd.CombinedOutput()
-  // out holds the optimal knobs
+func (f *Finch) StartMAPELoop() {
+	ticker := time.NewTicker(MonitorFrequency * time.Second)
+	quitWatcher := make(chan struct{})
+	
+	go f.MonitorAndAnalyzeContext(ticker, quitWatcher)
+	
+	datasetTicker := time.NewTicker(DatasetBuilderFrequency * time.Minute)
+	datasetQuit := make(chan struct{})
+
+	go f.buildDatasetPeriodically(datasetTicker, datasetQuit)
 }
 \end{lstlisting}
 
-% TALK about that "propagation" effect or something like it.
+The goroutine that periodically builds the dataset starts an inner loop that extract all metrics from Prometheus and builds the necessary dataset for training every $DatasetBuilderFrequency$ minutes as shown below.
 
-\subsection{Adaptation methods}
+\begin{lstlisting}
+func buildDatasetPeriodically(tickerBuilder time.Ticker, quitBuilder chan) {
+	for {
+		select {
+		case <-tickerBuilder.C:
+			f.DatasetBuilder(true, <dataset_range>)
+		case <-quitBuilder:
+			ticker.Stop()
+			return
+		}
+	}
+}
+\end{lstlisting}
+
+Monitoring and analyzing the current context and state of the target system requires more non-trivial work, such as periodically extracting, from Prometheus, a single row of metrics of that given timestamp, analyzing, extracting, and saving the current state of all SLAs defined by the user for the target system against the current context, checking if there is any SLA violation, triggering the adaptation procedure, waiting for the adaptation to fully propagate, and checking for improvements in order to prevent unnecessary new adaptations.
+
+\begin{minipage}{\linewidth}
+\lstset{aboveskip=20pt,belowskip=20pt}
+\begin{lstlisting}
+	func (f *Finch) MonitorAndAnalyzeContext(ticker time.Ticker, quitWatcher chan) {
+		SLAMetricsHistory := make(map[SLA][]float64)
+		adaptationWasCarried := false
+		isImproving := false
+		for {
+			select {
+			case <-ticker.C:
+				currentSLAMetrics := f.getSLAMetrics()
+				SLAMetricsHistory = f.appendSLAMetricsHistory(SLAMetricsHistory, currentSLAMetrics)
+
+				if f.checkForViolation(currentSLAMetrics) {
+
+					if adaptationWasCarried {
+						isImproving = f.checkForImprovement(SLAMetricsHistory)
+						if !isImproving {
+							adaptationWasCarried = false
+						}
+					}
+
+					if !adaptationWasCarried {
+						predictedOptimalKnobs := f.predictOptimalKnobs()
+
+						f.carryAdaptationPlan(predictedOptimalKnobs)
+
+						adaptationWasCarried = true
+					}
+				}
+			case <-quitWatcher:
+				ticker.Stop()
+				return
+			}
+		}
+	}
+\end{lstlisting}
+\end{minipage}
+
+Internally, \projectname{} implements a state machine to keep track of its operations in order to ensure that the target system is progressing and to control adaptations. Figure \ref{fig:statemachine} illustrates this state machine.
+
+\begin{figure*}[t]
+  \includegraphics[scale=0.6]{images/FinchStateMachine2.png}
+  \caption{\projectname{}'s state machine to ensure progress in the target system}
+  \label{fig:statemachine}
+\end{figure*}
+
+\subsection{Machine learning architecture}
+
+Given the previously defined dataset, \projectname{} trains many different models, one for each SLA's indicator. In the end we want to predict the SLI, given the set of configuration parameters and system metrics---including workload. 
+
+\projectname{} has 2 ML pipelines. The first one is training the models, which includes basic standardization, normalization, grid search, and cross validation. The Second one is predicting the SLI, given the configuration parameters. After running these pipelines, the last step is finding the optimal set of configuration parameters.
+
+\subsubsection{Training pipeline}
+
+As mentioned before, \projectname{} trains a model for each SLA indicator. To elaborate further on it;  if the user has two SLAs with respect to the latency of endpoint $A$ and $B$, then the two collected SLIs are the 99$^{th}$ percentiles of these endpoints' latency. Thus, \projectname{} will train two models, one for each SLI.
+
+Training different models requires slicing the original dataset to fit the models' needs. For example, when we want to predict the latency of endpoint $A$, latency $A$ is the target, or $y$, of the model, and the corpus, or $X$, is the rest of the dataset \textit{minus} the other SLIs collected. This way, the system metrics, workload and configuration parameters are isolated for the model training.
+
+\subsubsection{Learning how to learn: creating adaptive machine learning models}
+
+Since the dataset is very personalized with respect to the target system, there's no one model to rule them all, for example: we cannnot simply use logistic regression or a neural network with static hyperparameters. A personalized dataset means that it can have an arbitrary dimension (number of features) and size, it can have only continuous values or discrete values, or both. \projectname{} cannot know this beforehand. Thus, to work with uncertain datasets, when training the models we must perform grid search.
+
+Grid search is a technique to search for the best hyperparameters and models. Hyperparameters are parameters that are not directly learned by the models, parameters that configure certain aspects of a given machine learning models, for instance: how deep a decision tree should be, how many decision trees (i.e estimators) a random forest should have, or how many layers a neural network should have. Each machine learning model performs better when choosing the right model and the right hyperparameters for a given dataset. Some models-hyperparameters combination perform better with highly dimensional dataset, some perform better with well-balanced dataset, some are more resistant to outliers, sometimes the outliers is what you are trying to find. 
+
+Given all these options and uncertainties with respect to the collected dataset, grid search is a way to find the most well suited model and hyperparameters for the dataset being collected by the target system.
+
+Grid search exhaustively considers all hyperparameter combinations and many different models, train one model per combination, and select the most best performing one. This adds a considerate time and space complexity in the training pipeline, but it is something that cannot be avoided when choosing a model that will not overfit or underfit on dynamically generated datasets. 
+
+However, the grid search is only performed in two scenarios: first training cycle, where \projectname{} first handles the extracted dataset, after the first training cycle, it will know the best hyperparameters for the learned models and use them to re-train the model with the new data. The second scenario where grid search is performed is when the model's prediction performance starts to degrade, meaning that the dataset changed in some aspects, thus, needing to re-learn better a model and hyperparameters for the new dataset.
+
+In this pipeline, it is considered models such as linear regression, ridge regression, lasso, support vector machines, and decision trees. However, in the evaluations performed in this work (section \ref{ch:evaluation}), which used a few variations of dataset structure, we have found that one machine learning model/technique worked best the majority of times: gradient boosting with decision trees. 
+
+Gradient boosting is not exactly a machine learning model, but rather a class of techniques called Ensemble, where instead of using a single model, we train many slightly different models with different portions of the dataset, and combine them in a variety of ways to achieve a higher performance. Unlike common and more simple ensemble techniques such as bagging. the trained models are not working independently, instead, they work sequentially in such a way that the following predictors learn from the mistakes of the previous predictors.
+
+To validate the grid search and avoid overfitting, \projectname{} performs cross-validation with 5 splits, and $30\%\slash70\%$ test/train split ratio.
+
+\subsubsection{Predicting the optimal configuration}
+
+The user, when defining the adaptive configuration parameters, i.e: telling \projectname{} which configuration parameters it should learn to configure, also defines the value range or the possible values, in case of discrete configuration parameters. For instance, a certain configuration parameter $A$ could take values ranging from $1$ to $100$, and another parameter $B$ could take the following array of discrete values: 1, 5, 10, 50.
+
+After the models have been trained, we could simply predict the optimal configuration by passing the desired SLIs as our $X$, and in return get the optimal configuration as the $y$ coming from the prediction method.
+
+However, that showed not to be very effective, and we devised an additional algorithm on top of this straightforward call to prediction method. This algorithm came as answer to cope with the following problem: in some cases, a configuration parameter does not overlap with respect to its effects on different SLAs, thus, in these cases, a model for a specific SLA predicts the right configuration parameter, but only for that given parameter which affects it directly, and makes inaccurate predictions for the other configuration parameters, since it does not affect it directly. This prediction affects other SLAs negatively. Think of an SLA being selfish and only caring about the configuration parameter that affects it, and not thinking about the other SLAs.
+
+To overcome this problem and find the configuration that satisfies all SLAs or the majority of the SLAs, the algorithm created establishes some sort of consensus between the SLAs through a voting mechanism. To start it, it creates a 2D array with the Cartesian product of all possible parameter combinations, then, for each SLA, it predicts its respective SLI value for each of these combinations. The time to predict all these combinations is negligible, since predictions usually take a short amount of time, even with big matrices (show this in experiment).
+
+Then, for each SLA's predictions, it filters the configurations that satisfy the SLA plus a tolerance rate. Now we have, for each SLA, a set of configuration that is both diverse and satisfiable. In the last step, for each configuration parameter, in case of a discrete parameter, we pick the one with the highest occurrence, and in case of a continuous value, we compute the mean of the predicted values for this parameter.
+
+In the end it outputs the set of configuration parameters that, based on past experience, is most likely to satisfy all SLAs or the majority of SLAs.
+
+\subsection{Passive and active training mode}
+
+\projectname{} is always re-training its models with current data. However, the initial training cycles require grid search to be performed, and during these first few cycles, \projectname{} sits passively collecting data and training models, but not making predictions and adaptation plans. Thus, during this period, it is necessary to collect a diverse dataset, \projectname{} needs to know how to target systems respond to different configurations under different workloads. There are two ways to achieve that: passive and active training modes. These two options mode can be configured in \projectname{}'s configuration file.
+
+\subsubsection{Passive training mode}
+
+In passive training mode, \projectname{} will just collect data and train models while the system is running, not intervening with the target system's natural flow. Thus, this could mean taking a longer time for \projectname{} to start making adaptation plans, since it needs a diverse dataset.
+
+\subsubsection{Active training mode}
+
+In active training mode, as a way to speed up the learning process, \projectname{} will actively and frequently mutate the configuration parameters in the target system in order to fasten the process of gathering a more diverse dataset. Thus, it will know sooner how the target system respond to different configuration settings. Running it alongside a workload simulator also works well, which is what we did to evaluate an experiment, discussed in section \ref{sec:evaluation}. Since this a risky move to make in production, \projectname{} should be ran alongside a testing/staging environment.
 
 
 \section{Evaluation}
@@ -513,42 +538,97 @@ In the next subsection we discuss the setup for the experiment of the tool and t
 
 \subsection{Experiment}
 
-To evaluate the tool and the techniques here discussed, we developed a simple web service as the target system of \projectname{}. Although simple, this web service capture most commonly seen complexities, here is a brief description of it:
+We needed a production level web service exposed over a REST API. It is very hard to find these as open source, and the ones that we found were usually a simple proof of concept for a tool. They mostly had very few endpoints and a simple business logic, which is not realistic enough to test \projectname{}. As a result, we developed a web service with this goal in mind. This system captured the most common points of complexity in web services, which are:
 
 \begin{itemize}
-  \item It consists of the backend component that holds all the core logic of the application.
-  \item The application's services are exposed through many HTTP endpoints that follow a REST API approach. In our scenario, these endpoints are subject to a set of Service Level Agreements measured using APDEX. For instance, \textit{endpoint\_A\_POST} is a HTTP POST endpoint for the service $A$, and $X\%$ of all requests to it should not take more than $X ms$ to respond.
-  \item This backend is containerized with Docker.
-  \item Another Docker container holds a Postgres database used by the application.
-  \item At last, another Docker container holds \projectname{} itself, including the vendors' tools used by it---Prometheus, for instance.
+  \item A backend component that holds all the core logic of the application and containerized with Docker.
+  \item Multiple HTTP endpoints served over REST API. In our scenario, these endpoints are subject to a set of Service Level Agreements measured using APDEX. For instance, \textit{endpoint\_A\_POST} is an HTTP POST endpoint for the service $A$, and $X\%$ of all requests to it should not take more than $Y ms$ to respond.
+  \item Another Docker container holding a Postgres database
 \end{itemize}
 
-The reason why we had to develop our own target system, this web service, is that we needed a production-like web service exposed through a REST API. Since these types of systems are in fact a product, it is very hard to find these as open source, and the ones that you find are usually a simple proof of concept of a tool, for example: a web framework, with very few endpoints and simple business logic, which is not realistic enough to test \projectname{}.
+At last, after developing this target system, small modifications on it were made in order to use \projectname{} with it, these modifications were discussed in chapter \ref{ch:approach}. With \projectname{} running alongside the target system, all it was needed was time for \projectname{} to learn how to configure the target system.
 
 \subsubsection{Initial training phase with workload simulation}
 
-% Not sure if this subsection should go here or implementation details
 
-\projectname{} starts making accurate and useful predictions after we have a dataset of reasonable size. In other words, the user must leave \projectname{} running for a while so that it can learn patterns in the target system and its workload. For that to happen in our experiment, we needed workload in our target system, however, since this is not a system in production, we needed to simulate a realistic workload with fluctuations (high and low workloads depending on day and time) and realistic and expected calls to the service's API based on use cases, for instance: a user could browse some shopping items, add them to the shopping card, go back and forth adding and removing shopping items, then she would go to the checkout page, and finalize the shopping session.
+WE found that, to make accurate and useful predictions, \projectname{} needed a dataset of reasonable size. However, my web service was not a system in production, and the only way to collect the mentioned dataset was through workload simulation. We accomplished this by mimicking realistic user cases for the system. For instance, a user can browse shopping items, add and remove  items arbitrarily to a shopping cart, and finalize the shopping session by checking out. The simulation we created ran these user cases multiple times in parallel in order to stress the system in a realistic way. 
 
-We created a workload simulation to mimic these use cases.
+At the end, \projectname{} ran alongside the target system for a while, collecting data and learning the system's patterns.
 
-\subsubsection{Initial experiment with artificially generated knobs}
 
-This first experiment intended to answer the following question: \emph{Can \projectname{} infer the optimal set of configuration knobs without being explicitly programmed to do so?}
+\subsubsection{Experiment 1: configuration-controlled throttling}
+
+This first experiment intended to answer the following question: \emph{Can \projectname{} infer the optimal configuration parameters without being explicitly programmed?}
 
 To validate and answer this initial question, we needed not to focus on implementation details of the actual configuration changing, for example, gracefully handling Docker's containers and Postgresql restarts.
 
-To achieve this, we created a script that randomly (and temporarily) generates blocking points in the target system, these blocking points block the flow in the code for either $B_i$ milliseconds or $\frac{1}{B_i}$ milliseconds for each blocking point $B \in 1 \dots i$. These $B_i$ values are now our configuration knobs that affect the performance of the target system. Thus, if \projectname{} can perform its workflow---monitor, analyze, predict, and execute the adaptation plan---and correctly configure the knobs in such a way that the performance will be optimal, again, without being explicitly programmed for this task, then we validate the architecture of \projectname{} is achieving its goals and that predicting actual configuration knobs is a matter of dataset quality, and thus, time to learn correctly.
+To achieve this, we created a script that randomly (and temporarily) generates throttling points in the target system, these blocking points block the flow in the code for either $B_i$ milliseconds or $(\frac{1}{B_i}) * 10000$ milliseconds for each throttling point $B \in 1 \dots i$. That means that a throttling will block the flow either proportionally or inversely proportionally to the value of a configuration parameter. For instance, if a configuration value is $1000$, in a proportional throttle point, it will block the flow for 1000ms or 1s. In a inversely proportional throttle point, it will block the flow for 10ms. Thus, if this configuration can take a number between $1$ and $1000$, it could be one extreme or the other, depending on the type of throttling point.
 
-We ran 3 different sets of artificially generated knobs and studied \projectname{} performance on them. (Here we show this data)
+These $B_i$ values are now our artificial configuration parameters that affect the performance of the target system. Thus, if \projectname{} can perform its workflow---monitor, analyze, predict, and execute the adaptation plan---and correctly create an adaptation plan and configure the parameters in such a way that the performance will be either optimal or sub-optimal, again, \emph{without being explicitly programmed for this task}, then we validate the architecture of \projectname{} is achieving its goals and that predicting real configuration parameters is a matter of dataset quality, and thus, time to learn correctly.
 
-% The goal of this subsub is to motivate the use of the tool and techniques. We must show that default and static configurations cannot serve different scenarios
-\subsubsection{The challenging task of configuring a Postgres database}
+We ran 3 different sets of random artificially generated configuration parameters and studied \projectname{}'s performance on them. We focused on 3 questions during this experiment:
 
-It is known that, because of the fact that Postgres contains a very big set of configurations knobs, it is a challenging task to adapt Postgres to different scenarios. For instance, for a certain type of query, properly configuring Postgres' \textit{work\_memory} variable can drastically improve its performance. There are many cases like this one, however, it would not be productive to discusss each one of them.
+\begin{itemize}
+  \item Can \projectname{} predict the optimal or the sub-optimal configuration?
+  \item If yes, how long does it take to converge to the optimal or sub-optimal configuration?
+  \item How accurate is the model?
+\end{itemize}
 
-Postgres $9.4$ was used, and the configuration knobs considered were:
+For the model accuracy, it was used the coefficient of determination $R^2$ of the prediction, where $R^2 = 1 - \frac{u}{v}$, where $u$ is the residual sum of the squares  $\sum_{i=1}^{n}(y_{true} - y_{pred})^2$ and $v$ is the regression sum of squares $\sum_{i=1}^{n}(y_{true} - \overline{y_{true}})^2$.
+
+\subsubsection{Experiment 1 results}
+
+All tests were ran on a personal Dell laptop running Ubuntu 14.04 with 4 Intel Core i7-5500U CPU @ 2.40GHz and 16 GB of memory ram. The machine learning code makes uses of parallelism on all 4 cores when training the models and predicting.
+
+Each training cycle equals 1 hour, the target system had 5 configuration parameters. From these experiments it is possible to see that after the first cycle \projectname{} learns to find the optimal set of configuration parameters, achieving 100\% on its predictions and stabilizing after the second cycle. Table \ref{tab:experiment1} shows the results of these 3 experiments.
+
+Training cycle can become a bottleneck if we keep growing the dataset for many days, however this is an easy bottleneck to overcome, as the user can configure \projectname{} to extract the dataset less frequently after it gets a stable model accuracy. For future work, training the models could be easily distributed to machines that are not running the target system, in order to prevent resource saturation and affect the service quality.
+
+Predicting the optimal configuration parameters is surprisingly fast, performing the prediction around 100 milliseconds and 200 milliseconds, even with the algorithm to find the best optimal configuration by performing multiple exhaustive predictions discussed in \ref{ch:approach}.
+
+For all three runs of the experiment, after the second training cycle, it took between 5 to 10 minutes for the target system stabilizes all its SLA violations.
+
+\begin{table*}[t]
+\caption{Data from using \projectname{} with artificially generated configuration parameters}
+\label{tab:experiment1}
+\begin{tabular}{llllll}
+\hline
+Run 1     & Configuration precision & Models average accuracy & Dataset size (\# of rows) & Training time    & Prediction time  \\ \hline
+Initial   & 40\%                    & N.A                     & N.A                       & N.A              & N.A              \\
+Cycle \#1 & 60\%                    & 71\%                    & 326                       & 46 seconds       & 200 milliseconds \\
+Cycle \#2 & 100\%                   & 80\%                    & 1082                      & 1 min 20 seconds & 117 milliseconds \\ \hline
+Run 2     & Configuration precision & Models average accuracy & Dataset size (\# of rows) & Training time    & Prediction time  \\ \hline
+Initial   & 40\%                    & N.A                     & N.A                       & N.A              & N.A              \\
+Cycle \#1 & 60\%                    & 68\%                    & 374                       & 51 seconds       & 165 milliseconds \\
+Cycle \#2 & 100\%                   & 80\%                    & 1165                      & 1 min 12 seconds & 128 milliseconds \\ \hline
+Run 3     & Configuration precision & Models average accuracy & Dataset size (\# of rows) & Training time    & Prediction time  \\ \hline
+Initial   & 20\%                    & N.A                     & N.A                       & N.A              & N.A              \\
+Cycle \#1 & 80\%                    & 87\%                    & 334                       & 43 seconds       & 125 milliseconds \\
+Cycle \#2 & 100\%                   & 94\%                    & 1125                      & 1 min 7 seconds  & 119 milliseconds
+\end{tabular}
+\end{table*}
+
+
+\subsubsection{Experiment 2: performance overhead evaluation}
+
+Given the results found in experiment 1, the training algorithm can become a bottleneck as the dataset gets bigger. To study such scenario and to observe closely the resource usage of \projectname{} on top of the target system, we collected a bigger dataset, with the total of 28147 rows in the dataset. The strategy for the configuration parameters used were the same as in the first experiment: random throttle points in the target system's code.
+
+The first training, the one that performs an expensive grid search, took 29 minutes to find the optimal models and their hyperparameters for 5 SLI models, subsequent regular training (i.e training already knowing the best model, so, just fitting the model onto the data) took 4 minutes, prediction time took 268 milliseconds. And although 2 out of 5 models have low score, when working together and following the algorithm described in section \ref{ch:approach} they found the optimal set of configuration for the target system, i.e it correctly learned how to configure the target system, the average of the accuracy between all trained models was 71\%.
+
+\subsubsection{How much performance overhead is incurred by \projectname{} and Prometheus}
+
+Golang's pprof was used to perform a thorough profiling of both CPU-time and heap of the target system when using \projectname{}.
+
+While acting as a passive co-pilot (no training, no adaptation plans being created/carried out), just monitoring alongside Prometheus, the performance overhead over a 2 minutes profiling window was 90 milliseconds out of 1530 milliseconds (5.88\%). Finch's MAPE-K loop, its main component, took 40 milliseconds out of 1530 milliseconds (2.61\%) in a window of 2 minutes. Thus, while running only its monitoring/analyzing loop, \projectname{} incurred roughly 8.5\% CPU overhead.
+
+
+\subsubsection{Experiment 3: finding the optimal configuration for Postgres}
+
+It is known that, because of the fact that Postgres contains a very big set of configuration parameters, it is a challenging task to adapt Postgres to different scenarios. For instance, for a certain type of query, properly configuring Postgres' \textit{work\_memory} variable can drastically improve its performance. There are many cases like this one, however, it would not be productive to discuss each one of them.
+
+In this example, we use \projectname{} in the same target system from experiment 1 and 2, but now instead of random throttling points, \projectname{} tries to learn how to better configure the Postgres database behind the target system.
+
+Postgres $9.4$ was used, and the monitored configuration parameters were:
 
 \begin{itemize}
   \item Shared buffers
@@ -562,26 +642,43 @@ Postgres $9.4$ was used, and the configuration knobs considered were:
   \item Random page cost
 \end{itemize}
 
-In order to show that the Postgres default configuration is not the optimal one, we ran a workload simulation, which is similar to HTTP load testers, but instead of stressing a single endpoint with a very large number of requests per second, this workload simulation simulates different user workflows with varying intensities. For instance, 200 requests per second calling different sequences of endpoints: call endpoint $A$, wait for response, call $B$, wait response, and so on, until it completes a workflow that would be common for a user of this service. 
+The SLAs were the same as in the previous experiments. However, the adaptive configuration file is different, as it contains all previously cited Postgres parameters and in each one of them, it defines the configuration parameter as a custom one, pointing it to the appropriate file that contains a procedure that \projectname{} should run when adapting this configuration parameter, as shown in listing \ref{lst:adaptiveconfig1}.
 
-We ran the simulation---which tested the web application, and not the Postgres directly---for a certain period of time using two different sets of Postgres configuration knobs. By running this simulation we ended up with the dataset discussed in Section 3. The results confirmed both our beliefs and what is experienced in industry: The latencies of the endpoints were drastically affected by the different combinations of configuration knobs; different types of workflow and different intensities required different set of configurations in order to keep latency low, a non-optimal configuration for a given scenario could cause the violation of an SLO.
+The adaptive method in this experiment, called \emph{configurePG}, takes the predicted optimal configuration and perform the following actions:
 
-\iffalse
-\begin{table}[]
-  \centering
-  \caption{My caption}
-  \label{my-label}
-  \begin{tabular}{llllllllll}
-  Endpoint A(ms) & checkpoint\_completion\_target & checkpoint\_segments & default\_stat\_target & effective\_cache\_size & maintenance\_work\_mem & random\_page\_cost & shared\_buffers & wal\_buffers & work\_mem \\
-  1846                                           & 0.1                                & 1                        & 30                              & 16                             & 8                              & 2                      & 16                      & 2                    & 512               \\
-  1846                                           & 0.1                                & 1                        & 30                              & 16                             & 8                              & 2                      & 16                      & 2                    & 512               \\
-  1846                                           & 0.1                                & 1                        & 30                              & 16                             & 8                              & 2                      & 16                      & 2                    & 512               \\
-  119                                            & 0.5                                & 3                        & 100                             & 128                            & 16                             & 4                      & 128                     & 128                  & 1024              \\
-  119                                            & 0.5                                & 3                        & 100                             & 128                            & 16                             & 4                      & 128                     & 128                  & 1024              \\
-  119                                            & 0.5                                & 3                        & 100                             & 128                            & 16                             & 4                      & 128                     & 128                  & 1024             
-  \end{tabular}
-  \end{table}
-\fi
+\begin{itemize}
+\item Loads the current Postgres configuration file.
+\item Changes the predicted parameters to their respective predicted values and persists it to disk.
+\item Using Docker remote API, it creates a new Postgres container, which loads the new configuration file, this Postgres instance points to the same volume as the current running Postgres instance.
+\item Tells the service what is the new Postgres instance's ip:port.
+\item Kills the previous Postgres Docker container
+\end{itemize}
+
+This way, all changes to Postgres will be effective because of the full restart of the instance.
+
+\subsubsection{Results}
+
+In this experiment, the target system started with the default configuration for Postgres. After a while, given the heavy workload, some of the SLAs were violated. However, that happened before \projectname{} learned its models, so nothing could be done before the training. After the training cycle, which took 2 hours, \projectname{} triggered an adaptation, since the target system was in a state of SLA violation. After predicting the best optimal configuration for that scenario and carrying out the adaptation, the 99th percentile latency was reduced by $39.85\%$, the comparison of before and after the adaptation can be seen in figure \ref{fig:pgexperiment}.
+
+
+\begin{figure*}[t]
+	\includegraphics[scale=0.3]{images/pgexperiment.png}
+  \caption{Experiment 3: 99th percentile latency of all endpoints before and after adaptation}
+  \label{fig:pgexperiment}  
+\end{figure*}
+
+
+\begin{lstlisting}[float,floatplacement=H,caption={Example of one of the adaptive configurations used in experiment 3},label={lst:adaptiveconfig1}]
+[
+  "pg_shared_buffers": {
+    "value": 128,
+    "valueType": "discrete",
+    "values": [16, 128, 4000, 16000],
+    "isCustom": true,
+    "adaptationMethod": "configurePG"
+  }
+]
+\end{lstlisting}
 
 
 \section{Discussion and future work}

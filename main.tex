@@ -121,11 +121,11 @@
 
 
 \begin{abstract}
-Due to the advancement in distributed systems and the increasing industrial demands, software systems contain multiple components with complex interactions, e.g databases and their replication, caching components, proxies and load balancers, application instances and their complex configuration parameters. The engineers in a project must tinker with many configuration parameters that change the behaviour and/or structure of the system, this can cause many problems that affect the quality of the service in unexpected ways.
+Due to advancements in distributed systems and the increasing industrial demands placed on these systems, distributed systems are comprised of multiple complex components (e.g databases and their replication infrastructure, caching components, proxies, and load balancers) each of which have their own complex configuration parameters that enable them to be tuned for given runtime requirements. Software  Engineers must manually tinker with many of these configuration parameters that change the behaviour and/or structure of the system in order to achieve their system requirements. In many cases, static configuration settings might not meet certain demands in a given context and ad hoc modifications of these configuration parameters can trigger unexpected behaviours, which can have negative effects on the quality of the overall system.
 
-In this work we show the design and analysis of a pragmatic machine learning-based tool, called \projectname{}, that assists the engineering of systems that: 1) Monitor themselves, 2) Forecast workloads and performance metrics, and 3) Adapt their configurations at runtime to respond to changing system loads. After adopting \projectname{}, systems are able to dynamically modify their configuration parameters to optimize a specific metrics for their dynamic workloads.
+In this work, we show the design and analysis of Finch; a tool that injects a machine learning based MAPE-K feedback loop to existing systems to automate how these configuration parameters are set. Finch configures and optimizes the system to meet service-level agreements in uncertain workloads and usage patterns. Rather than changing the core infrastructure of a system to fit the feedback loop, Finch asks the user to perform a small set of actions: instrumenting the code and configuration parameters, defining service-level objectives and agreements, and enabling programmatic changes to these configurations. As a result, Finch learns how to dynamically configure the system at runtime to self-adapt to its dynamic workloads.
 
-We show that \projectname{} can decrease the risk of changing system configurations at runtime, replacing the trial-and-error engineering effort that otherwise would be spent manually optimizing a system's wide array of configuration parameters with an automated self-adaptive system.
+We show how Finch can replace the trial-and-error engineering effort that otherwise would be spent manually optimizing a system's wide array of configuration parameters with an automated self-adaptive system.
 
 \end{abstract}
 
@@ -151,7 +151,7 @@ We show that \projectname{} can decrease the risk of changing system configurati
 \maketitle
 
 \input{body}
-\input{appendix}
+% \input{appendix}
 
 \bibliographystyle{ACM-Reference-Format}
 \bibliography{references} 

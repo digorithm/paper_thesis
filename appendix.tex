@@ -125,7 +125,7 @@ SuccessiveSums =
   \begin{pmatrix}-10 & -10 & -10 & -10 & -10 & 10 & 20 & 5 & 10 & 5\end{pmatrix}
 \]
 
-then, we sum the values in this $SuccessiveSums$ array, if it yields a number bigger or equal to zero, it means that the target system is improving, and we return it as a boolean value to prevent firing overlapping adaptation plans. However, we keep checking for improvements, in cases where it had an initial improvement, but for instance, the workload pattern changed, causing the the sum of the $SuccessiveSums$ to be negative, we can return a boolean as false, causing the adaptation procedure to run again.
+then, we sum the values in this $SuccessiveSums$ array, if it yields a number greater than zero, it means that the target system is improving, and we return it as a boolean value to prevent firing overlapping adaptation plans. However, we keep checking for improvements, in cases where it had an initial improvement, but for instance, the workload pattern changed, causing the the sum of the $SuccessiveSums$ to be negative, we can return a boolean as false, causing the adaptation procedure to run again.
 
 The number $n$ of past historical values, including the current one, shown to be working well for $n=5$, meaning that we get the current APDEX score, plus other 4 that were recently extracted.
 
@@ -135,3 +135,22 @@ The number $n$ of past historical values, including the current one, shown to be
   \label{fig:finch3}
 \end{figure*}
 \end{appendices}
+
+\subsection{Finch configuration}
+
+\subsubsection{Mutating configuration for initial learning}
+
+Before the first training cycle, \projectname{} randomly changes the configurations---given a value range or possible selections---in the target system in order to learn how it behaves.
+
+
+\subsubsection{SLI adjustment effect}
+
+The experiments ran have shown an important insight: time to collect the dataset is the most crucial part of \projectname{} workflow. One of the reasons is that, in a short period of time, only the tasks that happened more frequently will have more predominance in the dataset, and thus, only configuration closely related to these tasks will have accurate predictions. Allowing the dataset to grow bigger and more diverse showed to be a good way to prevent this sort of bias.
+
+Another reason, and an even more important one, is what we called \emph{SLI adjusment effect}. Currently, our service-level indicator for a single service is its 99th percentile of the requests latency. One important characteristics of the 99th percentile is: since it focuses on a very small sample of the data that went above the threshold and violated an SLA, it takes time for the newly adapted configuration, \emph{now actually showing signs of improvements}, to take effect on the service-level indicator. If we prematurely take this dataset, it will indicate as if the new (and correct) configuration is not a good configuration, as the 99th percentile is still violating the agreement, however, the longer we wait for the SLI to adjust to the new configuration, the better the SLI will reflect it, balancing the dataset and enabling the machine learning component to make more accurate predictions.
+
+Simple term: the sli points don't reflect any current improvement now, it will only show improvements after a certain time.
+
+\subsubsection{How much data is enough for good predictions?}
+
+This is one of the most polemic questions in the machine learning community. And just like in software engineering, the answer will always be: it depends. It depends on the quality of the dataset, how many features (SLIs) are being extracted, for how long it's been collecting data, and how \projectname{} was configured to collect the data. (More on this)
