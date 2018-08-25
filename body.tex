@@ -318,19 +318,6 @@ func (app *Application) MiddlewareStruct() (*interpose.Middleware, error) {
 ]
 \end{lstlisting}
 
-\begin{lstlisting}[float,floatplacement=H,caption={Example of an SLA definition in finch\_sla.json},label={lst:finchslaexample}]
-[
-  {
-    "sla": "95% of the POST requests to Users should be under 150ms",
-    "endpoint": "/users",
-    "method": "POST",
-    "metric": "latency",
-    "threshold": 150,
-    "agreement": 95
-  }
-]
-\end{lstlisting}
-
 \section{Architecture and implementation}
 
 This chapter discuss in more details how the main components of \projectname{} work. These main components were written using the programming language Go, and the machine learning components were written in Python.
