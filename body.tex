@@ -387,7 +387,7 @@ To validate the grid search and avoid overfitting, \projectname{} performs cross
 
 \subsubsection{Predicting the optimal configuration}
 
-The user, when defining the adaptive configuration parameters, i.e: telling \projectname{} which configuration parameters it should learn to configure, also defines the value range or the possible values, in case of discrete configuration parameters. For instance, a certain configuration parameter $A$ could take values ranging from $1$ to $100$, and another parameter $B$ could take the following array of discrete values: 1, 5, 10, 50.
+The user, when defining the adaptive configuration parameters, also defines the value range or the possible values, in case of discrete configuration parameters. For instance, a certain configuration parameter $A$ could take values ranging from $1$ to $100$, and another parameter $B$ could take the following array of discrete values: 1, 5, 10, 50.
 
 After the models have been trained, we could simply predict the optimal configuration by passing the desired SLIs as our $X$, and in return get the optimal configuration as the $y$ coming from the prediction method.
 
@@ -401,15 +401,15 @@ In the end it outputs the set of configuration parameters that, based on past ex
 
 \subsection{Passive and active training mode}
 
-\projectname{} is always re-training its models with current data. However, the initial training cycles require grid search to be performed, and during these first few cycles, \projectname{} sits passively collecting data and training models, but not making predictions and adaptation plans. Thus, during this period, it is necessary to collect a diverse dataset, \projectname{} needs to know how to target systems respond to different configurations under different workloads. There are two ways to achieve that: passive and active training modes. These two options mode can be configured in \projectname{}'s configuration file.
+\projectname{} is always re-training its models with current data. However, the initial training cycles require grid search to be performed, and during these first few cycles, \projectname{} sits passively collecting data and training models, but not making predictions and adaptation plans. Thus, during this period, it is necessary to collect a diverse dataset, \projectname{} needs to know how to target systems respond to different configurations under different workloads. There are two ways to achieve that: passive and active training modes. These two options mode can be configured in \projectname{}'s configuration file. The passive mode just collects data and train models while the system is running, not intervening with the target system's natural flow. The active training mode, as a way to speed up the learning process, \projectname{} will actively and frequently mutate the configuration parameters in the target system in order to fasten the process of gathering a more diverse dataset.
 
-\subsubsection{Passive training mode}
+% \subsubsection{Passive training mode}
 
-In passive training mode, \projectname{} will just collect data and train models while the system is running, not intervening with the target system's natural flow. Thus, this could mean taking a longer time for \projectname{} to start making adaptation plans, since it needs a diverse dataset.
+% In passive training mode, \projectname{} will just collect data and train models while the system is running, not intervening with the target system's natural flow. Thus, this could mean taking a longer time for \projectname{} to start making adaptation plans, since it needs a diverse dataset. 
 
-\subsubsection{Active training mode}
+% \subsubsection{Active training mode}
 
-In active training mode, as a way to speed up the learning process, \projectname{} will actively and frequently mutate the configuration parameters in the target system in order to fasten the process of gathering a more diverse dataset. Thus, it will know sooner how the target system respond to different configuration settings. Running it alongside a workload simulator also works well, which is what we did to evaluate an experiment. Since this a risky move to make in production, \projectname{} should be ran alongside a testing/staging environment.
+% In active training mode, as a way to speed up the learning process, \projectname{} will actively and frequently mutate the configuration parameters in the target system in order to fasten the process of gathering a more diverse dataset. Thus, it will know sooner how the target system respond to different configuration settings. Running it alongside a workload simulator also works well, which is what we did to evaluate an experiment. Since this a risky move to make in production, \projectname{} should be ran alongside a testing/staging environment.
 
 
 \section{Evaluation}
