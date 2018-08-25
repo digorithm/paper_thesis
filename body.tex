@@ -246,9 +246,9 @@ Because there are many ways of using \projectname{} as a library in a target sys
 
 We start by instantiating and initializing \projectname{} where the target system does the same tasks in the codebase as shown in listing \ref{lst:systeminit}. The highlighted lines are the lines that were added to the target system. In the target system's entry point, the original $func New(config)$ will be normally called, but now it will also configure and initialize \projectname{}.
 
-Upon initialization, \projectname{} will try to find two JSON files, defined by the user, in the target system's root folder: one that describes each SLA for the target system, as shown in listing \ref{lst:finchsla}, an SLA description example is shown in listing \ref{lst:finchslaexample}, and another one which defines the adaptive configuration parameters, as shown in the previous section.
+Upon initialization, \projectname{} will try to find two JSON files, defined by the user, in the target system's root folder: one that describes each SLA for the target system, as shown in listing \ref{lst:finchsla}, and another one which defines the adaptive configuration parameters, as shown in the previous section.
 
-The next step is to intercept the logging mechanism and use \projectname{}'s logging API to log the necessary data to train the dataset, analyze the context of the target system, and make predictions. This is done by creating a logging middleware that uses Finch's logging API, as shown in listing~\ref{lst:finchlog}, and then adding it to the middleware used by the target system, as shown in listing~\ref{lst:middleware}. With that done, all requests to this service will be analyzed by \projectname{} so that it can perform its tasks.
+The next step is to intercept the logging mechanism and use \projectname{}'s logging API to log the necessary data to train the dataset, analyze the context of the target system, and make predictions. This can be done by creating a logging middleware that uses Finch's logging API, and then adding it to the existing middleware used by the target system. With that done, all requests to this service will be analyzed by \projectname{} so that it can perform its tasks.
 
 Initially, \projectname{} will work as passive co-pilot; it collects data, analyzes it, and frequently builds a dataset with this data. After a while, it starts training models on this dataset, and if the accuracy is acceptable, whenever there's an SLA violation, it will trigger configuration adaptation in order to try to improve the target system performance.
 
@@ -265,43 +265,9 @@ func New(config *viper.Viper) (*Application, error) {
 		return nil, err
 	}
 
-	cookieStoreSecret := config.Get("cookie_secret").(string)
-
-	app := &Application{}
-	app.config = config
-	app.dsn = dsn
-	app.db = db
-	app.db.SetMaxIdleConns(10)
-	app.sessionStore = sessions.NewCookieStore([]byte(cookieStoreSecret))
+	// proceeds with the normal flow of the app
+	
 	return app, err
-}
-\end{lstlisting}
-
-\begin{lstlisting}[float,floatplacement=H,escapechar=;,caption={Defining logging middleware for Finch's logging},label={lst:finchlog}]
-func Log(Finch *finchgo.Finch) func(http.Handler) http.Handler {
-	return func(next http.Handler) http.Handler {
-		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-			// Inject monitoring loop
-			Finch.MonitorWorkload(r.Method, r.basePath)
-			Finch.MonitorLatency(r)
-			Finch.MonitorConfigurationParameters()
-		})
-	}
-}
-\end{lstlisting}
-
-\begin{lstlisting}[float,floatplacement=H,escapechar=;,caption={Injecting Finch's logging middleware into target system's HTTP middleware},label={lst:middleware}]
-func (app *Application) MiddlewareStruct() (*interpose.Middleware, error) {
-	middle := interpose.New()
-	middle.Use(middlewares.SetDB(app.db))
-	middle.Use(middlewares.SetSessionStore(app.sessionStore))
-	;\sethlcolor{soulgreen}\hl{	middle.Use(middlewares.Log(Finch))};
-
-	middle.UseHandler(app.Mux())
-
-	return middle, nil
-}
 }
 \end{lstlisting}
 
